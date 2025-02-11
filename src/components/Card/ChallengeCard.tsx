@@ -9,7 +9,6 @@ const categoryColors: Record<string, string> = {
     Learning: 'bg-green-300',
     Hobby: 'bg-purple-300',
     Work: 'bg-yellow-300',
-    Travel: 'bg-orange-300',
 };
 
 const ChallengeCard = ({ habit, hasSucceededToday }: { habit: HabitType; hasSucceededToday?: boolean }) => {
