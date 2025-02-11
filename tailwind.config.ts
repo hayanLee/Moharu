@@ -2,6 +2,7 @@ import scrollbarHide from 'tailwind-scrollbar-hide';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+    darkMode: ['class'],
     content: [
         './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
         './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,8 +11,8 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
-                foreground: 'rgb(var(--foreground-rgb))',
-                background: 'rgb(var(--background-rgb))',
+                foreground: 'hsl(var(--foreground))',
+                background: 'hsl(var(--background))',
                 point: 'rgb(var(--point))',
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
@@ -45,20 +46,38 @@ const config: Config = {
                     foreground: 'hsl(var(--card-foreground))',
                 },
                 warn: 'rgb(var(--warn))',
+                chart: {
+                    '1': 'hsl(var(--chart-1))',
+                    '2': 'hsl(var(--chart-2))',
+                    '3': 'hsl(var(--chart-3))',
+                    '4': 'hsl(var(--chart-4))',
+                    '5': 'hsl(var(--chart-5))',
+                },
             },
             backgroundImage: {
                 gliter: 'var(--gliter)',
             },
             keyframes: {
                 glitter: {
-                    '0%, 100%': { filter: 'brightness(1.2)' },
-                    '50%': { filter: 'brightness(2)' },
+                    '0%, 100%': {
+                        filter: 'brightness(1.2)',
+                    },
+                    '50%': {
+                        filter: 'brightness(2)',
+                    },
                 },
             },
-            animation: { glitter: 'glitter 3.5s infinite' },
+            animation: {
+                glitter: 'glitter 3.5s infinite',
+            },
+            borderRadius: {
+                lg: 'var(--radius)',
+                md: 'calc(var(--radius) - 2px)',
+                sm: 'calc(var(--radius) - 4px)',
+            },
         },
     },
-    plugins: [scrollbarHide],
+    plugins: [scrollbarHide, require('tailwindcss-animate')],
 };
 
 export default config;
