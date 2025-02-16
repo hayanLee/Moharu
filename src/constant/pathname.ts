@@ -1,3 +1,7 @@
+export const INTRO = '/intro';
+export const LOGIN = '/intro/log-in';
+export const SIGNUP = '/intro/sign-up';
+
 export const HOME = '/';
 export const MYPAGE = '/mypage';
 
