@@ -1,26 +1,49 @@
 'use client';
+import { logIn } from '@/app/actions/userActions';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { INTRO, SIGNUP } from '@/constant/pathname';
+import { HOME, INTRO, SIGNUP } from '@/constant/pathname';
+import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const formSchema = z.object({
-    id: z.string(),
-    password: z.string(),
+    email: z.string(),
+    password: z.string().min(8, '비밀번호는 최소 8자리 입니다.'),
 });
 
 const LoginPage = () => {
+    const { toast } = useToast();
+    const router = useRouter();
     // useForm으로 form 객체 생성
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        },
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
+        const result = await logIn(values);
+        if (result.success) {
+            toast({
+                title: '로그인 성공',
+                description: '로그인이 정상적으로 되었습니다.',
+            });
+            router.replace(HOME);
+        } else {
+            return toast({
+                title: '로그인 실패',
+                description: '로그인이 실패하였습니다.',
+                variant: 'warn',
+            });
+        }
     };
     return (
         <div>
@@ -28,12 +51,12 @@ const LoginPage = () => {
                 <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
                     <FormField
                         control={form.control}
-                        name='id'
+                        name='email'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Id</FormLabel>
+                                <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='id' type='email' {...field} />
+                                    <Input placeholder='email' type='email' {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

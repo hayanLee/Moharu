@@ -1,55 +1,65 @@
 'use client';
+import { signUp } from '@/app/actions/userActions';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { INTRO } from '@/constant/pathname';
+import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const adjectives = ['용감한', '침착한', '현명한', '강인한'];
-const noun = ['고양이', '강아지', '수달', '거북이'];
-
-const makeRandomNickName = () => {
-    let ad = adjectives[Math.floor(Math.random() * adjectives.length)];
-    let n = noun[Math.floor(Math.random() * noun.length)];
-    return `${ad} ${n}`;
-};
-
 const formSchema = z.object({
-    id: z.string(),
+    email: z.string(),
     password: z.string().min(8, '8자리 이상으로 입력하세요.'),
     nickname: z.string().optional(),
 });
 
 const AuthPage = () => {
+    const { toast } = useToast();
+    const router = useRouter();
     // useForm으로 form 객체 생성
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            id: '',
+            email: '',
             password: '',
             nickname: '',
         },
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        if (!values.nickname || values.nickname.trim()) values.nickname = makeRandomNickName();
-        console.log(values);
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        const result = await signUp({ ...values, nickname: values.nickname || undefined });
+        if (result.success) {
+            toast({
+                title: '회원가입 성공',
+                description: '회원가입이 정상적으로 되었습니다.',
+            });
+            router.replace(INTRO);
+        } else {
+            return toast({
+                title: '회원가입 실패',
+                description: '동일한 이메일이 존재하거나, 회원가입이 실패하였습니다.',
+                variant: 'warn',
+            });
+        }
+        // console.log('>>>>>>', result);
     };
+
     return (
         <div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
                     <FormField
                         control={form.control}
-                        name='id'
+                        name='email'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Id</FormLabel>
+                                <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='id' type='email' {...field} />
+                                    <Input placeholder='email' type='email' {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
