@@ -3,7 +3,7 @@ import { signUp } from '@/app/actions/userActions';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { INTRO } from '@/constant/pathname';
+import { HOME, INTRO } from '@/constant/pathname';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
@@ -20,6 +20,7 @@ const formSchema = z.object({
 const AuthPage = () => {
     const { toast } = useToast();
     const router = useRouter();
+
     // useForm으로 form 객체 생성
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -32,12 +33,12 @@ const AuthPage = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         const result = await signUp({ ...values, nickname: values.nickname || undefined });
-        if (result.success) {
+        if (result.data?.session) {
             toast({
                 title: '회원가입 성공',
                 description: '회원가입이 정상적으로 되었습니다.',
             });
-            router.replace(INTRO);
+            router.replace(HOME);
         } else {
             return toast({
                 title: '회원가입 실패',
@@ -45,7 +46,6 @@ const AuthPage = () => {
                 variant: 'warn',
             });
         }
-        // console.log('>>>>>>', result);
     };
 
     return (
