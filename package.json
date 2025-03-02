@@ -7,7 +7,8 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "server": "npx json-server db.json -p 8000"
+        "server": "npx json-server db.json -p 8000",
+        "gen" : "npx supabase gen types typescript --project-id xjtudfjrlmweewncuyig --schema public > src/types/supabase.ts"
     },
     "dependencies": {
         "@hookform/resolvers": "^4.0.0",
