@@ -1,79 +1,95 @@
 'use client';
-import { submitSticker } from '@/app/actions';
+import { updateChallengeWithSticker } from '@/app/actions/challengeActions';
+import { getAllSticker } from '@/app/actions/stickerAction';
+import { SignedUrlObj } from '@/app/actions/types/response';
 import { Button } from '@/components/ui/button';
 import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
 } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const StickerDrawer = ({ images, goalId, disabled }: { images: string[]; goalId: string; disabled: boolean }) => {
-    const [selectedSticker, setSelectedSticker] = useState<string | null>(null);
-    const handleClick = (img: string) => setSelectedSticker(img);
+interface StickerDrawerProps {
+  goalId: number;
+  disabled: boolean;
+  today: string;
+}
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (selectedSticker) await submitSticker(selectedSticker, goalId);
-    };
+const StickerDrawer = ({ goalId, disabled, today }: StickerDrawerProps) => {
+  const [stickers, setStickers] = useState<SignedUrlObj[]>([]); //SignedUrlObj
+  const [selectedSticker, setSelectedSticker] = useState<string | null>(null);
+  const handleClick = (signedUrl: string) => setSelectedSticker(signedUrl);
 
-    return (
-        <Drawer>
-            <DrawerTrigger disabled={disabled}>
-                <Button size={'lg'} className='mx-auto' disabled={disabled}>
-                    {disabled ? '오늘은 스티커를 붙였어요!' : 'Add Sticker'}
-                </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-                <div className='max-h-[80vh]'>
-                    <DrawerHeader>
-                        <DrawerTitle>Choose one Sticker</DrawerTitle>
-                        <DrawerDescription>This action cannot be undone.</DrawerDescription>
-                    </DrawerHeader>
+  useEffect(() => {
+    async function fetchStickers() {
+      const fetchedStickers = await getAllSticker();
+      if (fetchedStickers.success && fetchedStickers.signedUrls) setStickers(fetchedStickers.signedUrls);
+    }
 
-                    <div className='rounded-md max-w-md mx-auto p-4 max-h-[50vh] overflow-y-auto scrollbar-hide'>
-                        <div className='grid grid-cols-3 sm:grid-cols-4 gap-4'>
-                            {images.map((image) => (
-                                <div
-                                    key={image}
-                                    className={cn(
-                                        'bg-white rounded-full relative aspect-square flex justify-center items-center border',
-                                        selectedSticker === image && 'border-point border-2'
-                                    )}
-                                    onClick={() => handleClick(image)}
-                                >
-                                    <Image
-                                        src={image}
-                                        alt='dog-sticker'
-                                        fill
-                                        className='cursor-pointer object-contain scale-90'
-                                        sizes='(max-width: 640px) 25vw, (max-width: 1024px) 33vw, 25vw'
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+    fetchStickers();
+  }, []);
 
-                    <DrawerFooter>
-                        <DrawerClose>
-                            <form onSubmit={handleSubmit}>
-                                <Button type='submit' size={'lg'} disabled={!selectedSticker}>
-                                    Submit
-                                </Button>
-                            </form>
-                        </DrawerClose>
-                    </DrawerFooter>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedSticker) await updateChallengeWithSticker(goalId, selectedSticker, today);
+  };
+
+  return (
+    <Drawer>
+      <DrawerTrigger disabled={disabled} asChild>
+        <Button size={'lg'} className='mx-auto' disabled={disabled}>
+          {disabled ? '오늘은 스티커를 붙였어요!' : 'Add Sticker'}
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <div className='max-h-[80vh]'>
+          <DrawerHeader className='justify-center py-8'>
+            <DrawerTitle>✨ 오늘 붙일 스티커를 선택해 주세요 ✨</DrawerTitle>
+          </DrawerHeader>
+
+          <div className='rounded-md max-w-md mx-auto max-h-[50vh] overflow-y-auto scrollbar-hide'>
+            <div className='grid grid-cols-3 sm:grid-cols-4 gap-4'>
+              {stickers.map((sticker) => (
+                <div
+                  key={sticker.path}
+                  className={cn(
+                    'bg-white rounded-full relative aspect-square flex justify-center items-center border overflow-hidden',
+                    selectedSticker === sticker.path && 'border-point border-2'
+                  )}
+                  onClick={() => handleClick(sticker.path)}
+                >
+                  <Image
+                    src={sticker.signedUrlObj}
+                    alt='dog-sticker'
+                    fill
+                    className='cursor-pointer object-cover'
+                    sizes='(max-width: 640px) 25vw, (max-width: 1024px) 33vw, 25vw'
+                  />
                 </div>
-            </DrawerContent>
-        </Drawer>
-    );
+              ))}
+            </div>
+          </div>
+
+          <DrawerFooter>
+            <DrawerClose>
+              <form onSubmit={handleSubmit}>
+                <Button type='submit' size={'lg'} disabled={!selectedSticker}>
+                  Submit
+                </Button>
+              </form>
+            </DrawerClose>
+          </DrawerFooter>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
 };
 
 export default StickerDrawer;

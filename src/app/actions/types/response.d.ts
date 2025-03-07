@@ -9,3 +9,12 @@ interface FetchChallengesResponse extends Response {
   todayUntillDone?: Challenge[];
   todayDone?: Challenge[];
 }
+
+interface SignedUrlObj {
+  signedUrlObj: string;
+  path: string;
+}
+
+interface GetAllStickerResponse extends Response {
+  signedUrls?: SignedUrlObj[];
+}

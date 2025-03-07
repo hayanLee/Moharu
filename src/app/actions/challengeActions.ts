@@ -8,7 +8,7 @@ import { createClient } from '@/supabase/server';
 import { NewChallenge } from '@/types/challenge.type';
 import dayjs from 'dayjs';
 import { revalidatePath } from 'next/cache';
-import { FetchChallengesResponse, Response } from './types/challengeAction';
+import { FetchChallengesResponse, Response } from './types/response';
 
 // 1. 챌린지 추가
 export async function createChallenge(newChallenge: NewChallenge): Promise<Response> {
@@ -42,9 +42,14 @@ export async function updateChallengeWithSticker(challengeId: number, sticker: s
     } = await supabase.auth.getUser();
     if (!user) throw new Error('유저 없음');
 
+    const result = await fetchChallengeById(challengeId);
+
     const [{ data: insertData, error: insertError }, { data: updateData, error: updateError }] = await Promise.all([
       supabase.from('progress').insert({ challenge_id: challengeId, sticker_img: sticker }),
-      supabase.from('challenges').update({ last_updated: date }).eq('id', challengeId),
+      supabase
+        .from('challenges')
+        .update({ last_updated: date, completed_days: result.data.completed_days + 1 })
+        .eq('id', challengeId),
     ]);
 
     if (insertError) throw insertError;
