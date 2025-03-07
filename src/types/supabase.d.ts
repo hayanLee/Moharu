@@ -11,34 +11,40 @@ export type Database = {
     Tables: {
       challenges: {
         Row: {
-          category: string | null
-          challenge_name: string | null
-          created_at: string
+          category: string
+          challenge_name: string
+          created_at: string | null
           end_day: string | null
           id: number
-          period: number | null
-          start_day: string | null
-          user_id: string | null
+          is_completed: boolean
+          last_updated: string | null
+          period: number
+          start_day: string
+          user_id: string
         }
         Insert: {
-          category?: string | null
-          challenge_name?: string | null
-          created_at?: string
+          category?: string
+          challenge_name?: string
+          created_at?: string | null
           end_day?: string | null
           id?: number
-          period?: number | null
-          start_day?: string | null
-          user_id?: string | null
+          is_completed?: boolean
+          last_updated?: string | null
+          period: number
+          start_day?: string
+          user_id?: string
         }
         Update: {
-          category?: string | null
-          challenge_name?: string | null
-          created_at?: string
+          category?: string
+          challenge_name?: string
+          created_at?: string | null
           end_day?: string | null
           id?: number
-          period?: number | null
-          start_day?: string | null
-          user_id?: string | null
+          is_completed?: boolean
+          last_updated?: string | null
+          period?: number
+          start_day?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -54,26 +60,20 @@ export type Database = {
         Row: {
           challenge_id: number
           created_at: string
-          date: string | null
           id: number
           sticker_img: string | null
-          user_id: string
         }
         Insert: {
           challenge_id: number
           created_at?: string
-          date?: string | null
           id?: number
           sticker_img?: string | null
-          user_id?: string
         }
         Update: {
           challenge_id?: number
           created_at?: string
-          date?: string | null
           id?: number
           sticker_img?: string | null
-          user_id?: string
         }
         Relationships: [
           {
@@ -81,13 +81,6 @@ export type Database = {
             columns: ["challenge_id"]
             isOneToOne: false
             referencedRelation: "challenges"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Progress_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
