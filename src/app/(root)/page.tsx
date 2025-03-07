@@ -1,7 +1,6 @@
 import ChallengeCard from '@/components/Card/ChallengeCard';
 import Profile from '@/components/Profile/Profile';
 import { GOAL_DETAIL } from '@/constant/pathname';
-import { Tables } from '@/types/supabase';
 import Link from 'next/link';
 import { fetchChallenges } from '../actions/challengeActions';
 
@@ -20,7 +19,7 @@ const MainPage = async () => {
       )}
 
       <div className='flex flex-col grow overflow-y-auto scrollbar-hide gap-2 my-3'>
-        {todayUntillDone?.map((habit: Tables<'challenges'>) => (
+        {todayUntillDone?.map((habit) => (
           <Link href={GOAL_DETAIL(habit.id)} key={habit.id}>
             <ChallengeCard habit={habit} />
           </Link>
@@ -34,7 +33,7 @@ const MainPage = async () => {
 
         {todayDone?.map((habit) => (
           <Link href={GOAL_DETAIL(habit.id)} key={habit.id}>
-            <ChallengeCard habit={habit} hasSucceededToday={true} />
+            <ChallengeCard habit={habit} />
           </Link>
         ))}
       </div>

@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           category: string
           challenge_name: string
+          completed_days: number
           created_at: string | null
           end_day: string | null
           id: number
@@ -25,18 +26,20 @@ export type Database = {
         Insert: {
           category?: string
           challenge_name?: string
+          completed_days?: number
           created_at?: string | null
           end_day?: string | null
           id?: number
           is_completed?: boolean
           last_updated?: string | null
           period: number
-          start_day?: string
+          start_day: string
           user_id?: string
         }
         Update: {
           category?: string
           challenge_name?: string
+          completed_days?: number
           created_at?: string | null
           end_day?: string | null
           id?: number

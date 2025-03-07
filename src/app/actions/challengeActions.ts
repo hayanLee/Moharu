@@ -7,16 +7,25 @@
 import { createClient } from '@/supabase/server';
 import { NewChallenge } from '@/types/challenge.type';
 import dayjs from 'dayjs';
-import { FetchChallengesResponse } from './types/challengeAction';
+import { revalidatePath } from 'next/cache';
+import { FetchChallengesResponse, Response } from './types/challengeAction';
 
 // 1. 챌린지 추가
-export async function createChallenge(newChallenge: NewChallenge) {
+export async function createChallenge(newChallenge: NewChallenge): Promise<Response> {
   try {
     const supabase = createClient();
-    console.log(newChallenge);
-    const { data, error } = await supabase.from('challenges').insert(newChallenge).select();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error('유저 없음');
+
+    const { error } = await supabase.from('challenges').insert(newChallenge);
     if (error) throw error;
-    return { success: true, data };
+
+    // 일단 페이지로 revalidate 적용
+    revalidatePath('/', 'page');
+    return { success: true };
   } catch (e) {
     console.error('등록 실패:', e);
     return { success: false, error: e instanceof Error ? e.message : 'Unknown error occurred' };
@@ -28,7 +37,11 @@ export async function updateChallengeWithSticker(challengeId: number, sticker: s
   try {
     const supabase = createClient();
 
-    // 두 개의 요청을 동시에 실행
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error('유저 없음');
+
     const [{ data: insertData, error: insertError }, { data: updateData, error: updateError }] = await Promise.all([
       supabase.from('progress').insert({ challenge_id: challengeId, sticker_img: sticker }),
       supabase.from('challenges').update({ last_updated: date }).eq('id', challengeId),
