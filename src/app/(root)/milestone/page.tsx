@@ -5,7 +5,6 @@ import Link from 'next/link';
 
 const StickersPage = async () => {
   const { data: finishedGoals } = await getEndedChallenge();
-  console.log(finishedGoals);
 
   return (
     <div className='flex flex-col h-full'>

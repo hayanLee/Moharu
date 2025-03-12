@@ -18,7 +18,7 @@ const ChallengeCard = ({ habit }: { habit: Tables<'challenges'> }) => {
 
   const progressPercentage = ((habit.completed_days / habit.period) * 100).toFixed(0);
   const difference = isFinished && dayjs(habit.end_day).diff(dayjs(habit.start_day), 'day');
-  console.log(difference);
+
   return (
     <div
       className={cn(
