@@ -1,46 +1,32 @@
 import { fetchChallengeById } from '@/app/actions/challengeActions';
 import TrashButton from '@/components/Button/TrashButton';
 import dayjs from 'dayjs';
-import Image from 'next/image';
 import StickerDrawer from './_components/StickerDrawer';
+import StickerGrid from './_components/StickerGrid';
 
 type GoalDetailProps = {
   params: { goalId: string };
-  searchParams: { [key: string]: string | undefined };
 };
 
-// 스티커 경로
-// const directoryPath = path.join(process.cwd(), 'public/assets/stickers/test');
-// 모든 스티커를 담은 배열로 가져오기
-// const images = getImageArray(directoryPath);
+const GoalDetailPage = async ({ params: { goalId } }: GoalDetailProps) => {
+  const numericGoalId = Number(goalId);
+  const singleChallenge = await fetchChallengeById(numericGoalId);
 
-const generatePeriodArr = (period: number, progress) => {
-  return Array.from({ length: period }, (p, idx) => {
-    const progressItem = progress[idx];
-    return progressItem ? (
-      <div className='day !bg-white relative overflow-hidden' key={progressItem.date}>
-        <Image src={''} alt='' fill className='object-cover' />
-      </div>
-    ) : (
-      <div key={idx} className='day'>
-        {idx + 1}
-      </div>
-    );
-  });
-};
-const GoalDetailPage = async ({ params }: GoalDetailProps) => {
-  const { goalId } = params;
-  const challengeResponse = await fetchChallengeById(Number(goalId));
+  if (singleChallenge.status === 'error') {
+    return <div className='text-red-500'>챌린지 데이터를 가져오는 데 실패했습니다.</div>;
+  }
 
-  if (!challengeResponse.data) return;
+  const { challenge, progress } = singleChallenge.data || {};
+  if (!challenge) {
+    return <div className='text-red-500'>챌린지를 찾을 수 없습니다.</div>;
+  }
 
-  const { challenge_name, start_day, end_day, period, progress, is_completed } = challengeResponse.data;
-  const today = dayjs().format('YYYY/MM/DD');
-  const todaySticker =
-    progress.length === 0 || dayjs(progress[progress.length - 1]['created_at']).format('YYYY/MM/DD') !== today;
-  const periodArr = generatePeriodArr(period, progress);
+  const { challenge_name, start_day, end_day, period, is_completed, last_updated } = challenge;
+  const today = dayjs().format('YYYY-MM-DD');
+  const todaySticker = !is_completed && last_updated !== today;
+
   return (
-    <div className='flex flex-col gap-3 bg-blue h-full'>
+    <div className='grid grid-rows-[auto_1fr_auto] gap-3 sm:gap-5 h-full mb-3'>
       <div className='flex justify-between items-center'>
         <div>
           <h3 className='text-xl font-semibold'>{challenge_name}</h3>
@@ -48,16 +34,14 @@ const GoalDetailPage = async ({ params }: GoalDetailProps) => {
             {start_day} ~ {is_completed && end_day}
           </p>
         </div>
-        <TrashButton goalId={goalId} />
+        <TrashButton goalId={numericGoalId} />
       </div>
 
-      <div className='overflow-y-auto py-3 '>
-        <div className='grid grid-cols-5 gap-2 sm:gap-5'>{periodArr}</div>
+      <div className='overflow-y-auto py-3 scrollbar-hide'>
+        <StickerGrid period={period} progress={progress} />
       </div>
 
-      {!is_completed && (
-        <StickerDrawer goalId={Number(goalId)} disabled={!todaySticker} today={dayjs().format('YYYY-MM-DD')} />
-      )}
+      {!is_completed && <StickerDrawer goalId={numericGoalId} disabled={!todaySticker} today={today} />}
     </div>
   );
 };

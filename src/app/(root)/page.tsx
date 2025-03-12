@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { fetchChallenges } from '../actions/challengeActions';
 
 const MainPage = async () => {
-  const { todayUntillDone, todayDone } = await fetchChallenges();
+  const {
+    data: { todayUntillDone, todayDone },
+  } = await fetchChallenges();
   return (
     <div className='flex flex-col h-full'>
       <Profile />

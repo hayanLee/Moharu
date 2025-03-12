@@ -1,7 +1,5 @@
 'use client';
-import { updateChallengeWithSticker } from '@/app/actions/challengeActions';
-import { getAllSticker } from '@/app/actions/stickerAction';
-import { SignedUrlObj } from '@/app/actions/types/response';
+import { getAllStickers } from '@/app/actions/stickerAction';
 import { Button } from '@/components/ui/button';
 import {
   Drawer,
@@ -13,6 +11,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
+import supabaseLoader from '@/supabase/supabaseLoader';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
@@ -23,22 +22,21 @@ interface StickerDrawerProps {
 }
 
 const StickerDrawer = ({ goalId, disabled, today }: StickerDrawerProps) => {
-  const [stickers, setStickers] = useState<SignedUrlObj[]>([]); //SignedUrlObj
   const [selectedSticker, setSelectedSticker] = useState<string | null>(null);
-  const handleClick = (signedUrl: string) => setSelectedSticker(signedUrl);
-
+  const [stickers, setStickers] = useState<string[]>([]);
   useEffect(() => {
-    async function fetchStickers() {
-      const fetchedStickers = await getAllSticker();
-      if (fetchedStickers.success && fetchedStickers.signedUrls) setStickers(fetchedStickers.signedUrls);
-    }
-
-    fetchStickers();
+    const getStickers = async () => {
+      const { status, data } = await getAllStickers();
+      if (status === 'success') setStickers(data);
+    };
+    getStickers();
   }, []);
+
+  const handleClick = (signedUrl: string) => setSelectedSticker(signedUrl);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedSticker) await updateChallengeWithSticker(goalId, selectedSticker, today);
+    // 스티커 추가하기
   };
 
   return (
@@ -56,21 +54,22 @@ const StickerDrawer = ({ goalId, disabled, today }: StickerDrawerProps) => {
 
           <div className='rounded-md max-w-md mx-auto max-h-[50vh] overflow-y-auto scrollbar-hide'>
             <div className='grid grid-cols-3 sm:grid-cols-4 gap-4'>
-              {stickers.map((sticker) => (
+              {stickers?.map((sticker) => (
                 <div
-                  key={sticker.path}
+                  key={sticker}
                   className={cn(
                     'bg-white rounded-full relative aspect-square flex justify-center items-center border overflow-hidden',
-                    selectedSticker === sticker.path && 'border-point border-2'
+                    selectedSticker === sticker && 'border-point border-2'
                   )}
-                  onClick={() => handleClick(sticker.path)}
+                  onClick={() => handleClick(sticker)}
                 >
                   <Image
-                    src={sticker.signedUrlObj}
-                    alt='dog-sticker'
+                    src={`stickers/${sticker}`}
+                    alt='Picture of sticker'
                     fill
                     className='cursor-pointer object-cover'
                     sizes='(max-width: 640px) 25vw, (max-width: 1024px) 33vw, 25vw'
+                    loader={supabaseLoader}
                   />
                 </div>
               ))}

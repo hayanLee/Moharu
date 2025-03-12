@@ -1,14 +1,27 @@
 import { Challenge } from '@/types/challenge.type';
+import { Tables } from '@/types/supabase';
+
+type ApiResponse<T> = {
+  status: 'success' | 'error';
+  data: T;
+};
 
 interface Response {
   success: boolean;
   error?: string;
 }
 
-interface FetchChallengesResponse extends Response {
-  todayUntillDone?: Challenge[];
-  todayDone?: Challenge[];
-}
+type AllChallenges = {
+  todayUntillDone: Challenge[];
+  todayDone: Challenge[];
+};
+
+type SingleChallenge = {
+  challenge: Tables<'challenges'> | null;
+  progress: Tables<'progress'>[];
+};
+
+type AllStickers = string[];
 
 interface SignedUrlObj {
   signedUrlObj: string;
@@ -17,4 +30,8 @@ interface SignedUrlObj {
 
 interface GetAllStickerResponse extends Response {
   signedUrls?: SignedUrlObj[];
+}
+
+interface ChallengeDeatil extends Tables<'challenges'> {
+  progress: Tables<'progress'>[];
 }
