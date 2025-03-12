@@ -20,6 +20,9 @@ body {
   .day {
     @apply bg-gray-300 rounded-full flex justify-center items-center text-white/70 aspect-square border-2 sm:text-xl;
   }
+  .font-pretendard {
+    font-family: pretendard;
+  }
 }
 
 @layer base {

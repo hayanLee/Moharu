@@ -1,9 +1,6 @@
 import { getUserInfo } from '@/app/actions/userActions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MYPAGE } from '@/constant/pathname';
-import { ContactRound } from 'lucide-react';
-import Link from 'next/link';
-import { Button } from '../ui/button';
+import ProfileEditDialog from '../Dialog/ProfileEditDialog';
 
 const Profile = async () => {
   const {
@@ -21,11 +18,7 @@ const Profile = async () => {
         <p className='text-gray-500'>{description}</p>
       </div>
 
-      <Button asChild variant={'ghost'} size={'icon'}>
-        <Link href={MYPAGE}>
-          <ContactRound size={30} />
-        </Link>
-      </Button>
+      <ProfileEditDialog userInfo={{ nickname, profile_url, description }} />
     </div>
   );
 };
