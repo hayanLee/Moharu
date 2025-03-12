@@ -18,15 +18,4 @@ type SingleChallenge = {
 
 type AllStickers = string[];
 
-interface SignedUrlObj {
-  signedUrlObj: string;
-  path: string;
-}
-
-interface GetAllStickerResponse extends Response {
-  signedUrls?: SignedUrlObj[];
-}
-
-interface ChallengeDeatil extends Tables<'challenges'> {
-  progress: Tables<'progress'>[];
-}
+type UserInfo = Pick<Talbes<'users'>, 'nickname' | 'profile_url' | 'description'>;
