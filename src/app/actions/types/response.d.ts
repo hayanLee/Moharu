@@ -6,11 +6,6 @@ type ApiResponse<T> = {
   data: T;
 };
 
-interface Response {
-  success: boolean;
-  error?: string;
-}
-
 type AllChallenges = {
   todayUntillDone: Challenge[];
   todayDone: Challenge[];

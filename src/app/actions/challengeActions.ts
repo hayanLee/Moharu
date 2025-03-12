@@ -23,7 +23,6 @@ export async function createChallenge(newChallenge: NewChallenge) {
     const { error } = await supabase.from('challenges').insert(newChallenge);
     if (error) throw error;
 
-    // 일단 페이지로 revalidate 적용
     revalidatePath('/', 'page');
     return { success: true };
   } catch (e) {
@@ -33,29 +32,43 @@ export async function createChallenge(newChallenge: NewChallenge) {
 }
 
 /* 2. 챌린지 스티커 붙이기 */
-export async function updateChallengeWithSticker(goalId: number, sticker: string, date: string) {
+export async function addStickerToChallenge(goalId: number, sticker: string): Promise<ApiResponse<null>> {
   try {
     const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error('유저 없음');
 
-    // const [{ data: user }, challengeData] = await Promise.all([supabase.auth.getUser(), fetchChallengeById(goalId)]);
-    // if (!user) throw new Error('유저 없음');
+    const { data, error } = await supabase
+      .from('challenges')
+      .select('completed_days')
+      .eq('id', goalId)
+      .eq('user_id', user.id)
+      .single();
+    if (error) throw new Error(`챌린지 데이터 가져오기 실패: ${error.message}`);
+    if (!data) throw new Error('챌린지 데이터가 존재하지 않습니다.');
 
-    // const [{ error: insertError }, { error: updateError }] = await Promise.all([
-    //   supabase.from('progress').insert({ challenge_id: goalId, sticker_img: sticker }),
-    //   supabase
-    //     .from('challenges')
-    //     .update({ last_updated: date, completed_days: challengeData.completed_days + 1 })
-    //     .eq('id', goalId),
-    // ]);
+    const [{ error: insertError }, { error: updateError }] = await Promise.all([
+      supabase.from('progress').insert({ challenge_id: goalId, sticker_img: sticker }),
+      supabase
+        .from('challenges')
+        .update({
+          last_updated: dayjs().format('YYYY-MM-DD'),
+          completed_days: data['completed_days'] as number,
+        })
+        .eq('id', goalId),
+    ]);
 
-    // if (insertError) throw insertError;
-    // if (updateError) throw updateError;
+    if (insertError) throw new Error(`진행 상태 삽입 실패: ${insertError.message}`);
+    if (updateError) throw new Error(`챌린지 업데이트 실패: ${updateError.message}`);
 
-    revalidatePath(`/goals/${goalId}`, 'page');
+    revalidatePath(`/goals/${goalId}`);
 
-    return { success: true };
+    return { status: 'success', data: null };
   } catch (e) {
     console.error('스티커 등록 실패:', e);
+    return { status: 'error', data: null };
   }
 }
 

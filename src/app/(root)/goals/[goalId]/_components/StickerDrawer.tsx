@@ -1,4 +1,5 @@
 'use client';
+import { addStickerToChallenge } from '@/app/actions/challengeActions';
 import { getAllStickers } from '@/app/actions/stickerAction';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,7 +23,7 @@ interface StickerDrawerProps {
 }
 
 const StickerDrawer = ({ goalId, disabled, today }: StickerDrawerProps) => {
-  const [selectedSticker, setSelectedSticker] = useState<string | null>(null);
+  const [selectedSticker, setSelectedSticker] = useState<string>('');
   const [stickers, setStickers] = useState<string[]>([]);
   useEffect(() => {
     const getStickers = async () => {
@@ -36,7 +37,7 @@ const StickerDrawer = ({ goalId, disabled, today }: StickerDrawerProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 스티커 추가하기
+    await addStickerToChallenge(goalId, selectedSticker);
   };
 
   return (
