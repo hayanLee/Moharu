@@ -97,12 +97,20 @@ export async function updateChallengeInfo({
 }
 
 /* 3. 챌린지 삭제 */
-export async function deleteChallenge() {
+export async function deleteChallenge(goalId: number): Promise<ApiResponse<null>> {
   try {
     const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error('유저 없음');
+
+    const response = await supabase.from('challenges').delete().eq('id', goalId);
+    if (response.status === 204) return { status: 'success', data: null };
+    else throw new Error('삭제 실패');
   } catch (e) {
     console.error('삭제 실패:', e);
-    return { success: false, error: e instanceof Error ? e.message : 'Unknown error occurred' };
+    return { status: 'error', data: null };
   }
 }
 
