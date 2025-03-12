@@ -1,6 +1,9 @@
 import { fetchChallengeById } from '@/app/actions/challengeActions';
 import TrashButton from '@/components/Button/TrashButton';
+import { GOAL_EDIT } from '@/constant/pathname';
 import dayjs from 'dayjs';
+import { PencilLine } from 'lucide-react';
+import Link from 'next/link';
 import StickerDrawer from './_components/StickerDrawer';
 import StickerGrid from './_components/StickerGrid';
 
@@ -34,7 +37,12 @@ const GoalDetailPage = async ({ params: { goalId } }: GoalDetailProps) => {
             {start_day} ~ {is_completed && end_day}
           </p>
         </div>
-        <TrashButton goalId={numericGoalId} />
+        <div className='flex space-x-4'>
+          <Link href={GOAL_EDIT(goalId)}>
+            <PencilLine />
+          </Link>
+          <TrashButton goalId={numericGoalId} />
+        </div>
       </div>
 
       <div className='overflow-y-auto py-3 scrollbar-hide'>
