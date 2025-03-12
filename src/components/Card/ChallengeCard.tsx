@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Tables } from '@/types/supabase';
 import dayjs from 'dayjs';
-import { AlarmClockCheck } from 'lucide-react';
+import { Goal } from 'lucide-react';
 
 const categoryColors: Record<string, string> = {
   Health: 'bg-red-300',
@@ -13,11 +13,12 @@ const categoryColors: Record<string, string> = {
 const now = dayjs().format('YYYY-MM-DD');
 
 const ChallengeCard = ({ habit }: { habit: Tables<'challenges'> }) => {
-  const isFinished = habit.is_completed;
+  const isFinished = !!habit.end_day;
   const hasSucceededToday = habit.last_updated === now;
 
   const progressPercentage = ((habit.completed_days / habit.period) * 100).toFixed(0);
-  // const difference = isFinished && dayjs(habit.endDay).diff(dayjs(habit.startDay), 'day') + 1;
+  const difference = isFinished && dayjs(habit.end_day).diff(dayjs(habit.start_day), 'day');
+  console.log(difference);
   return (
     <div
       className={cn(
@@ -39,8 +40,8 @@ const ChallengeCard = ({ habit }: { habit: Tables<'challenges'> }) => {
 
       {isFinished ? (
         <p className='text-2xl flex items-center gap-2 text-gray-800'>
-          <AlarmClockCheck size={24} />
-          {/* {difference} day */}
+          <Goal size={24} />
+          {difference} Day
         </p>
       ) : (
         <p className='text-4xl'>{progressPercentage}%</p>

@@ -6,6 +6,7 @@
 
 import { createClient } from '@/supabase/server';
 import { NewChallenge } from '@/types/challenge.type';
+import { Tables } from '@/types/supabase';
 import dayjs from 'dayjs';
 import { revalidatePath } from 'next/cache';
 import { AllChallenges, ApiResponse, SingleChallenge } from './types/response';
@@ -163,5 +164,32 @@ export async function fetchChallengeById(id: number): Promise<ApiResponse<Single
         progress: [],
       },
     };
+  }
+}
+
+/* 7. 종료된 챌린지 데이터 가져오기 */
+export async function getEndedChallenge(): Promise<ApiResponse<Tables<'challenges'>[]>> {
+  try {
+    const supabase = createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error('유저 없음');
+
+    const { data, error } = await supabase
+      .from('challenges')
+      .select('*')
+      .eq('user_id', user.id)
+      .not('end_day', 'is', null);
+    if (error) throw error;
+
+    return {
+      status: 'success',
+      data,
+    };
+  } catch (e) {
+    console.error('조회 실패:', e);
+    return { status: 'error', data: [] };
   }
 }
