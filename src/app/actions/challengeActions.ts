@@ -5,7 +5,7 @@
  */
 
 import { createClient } from '@/supabase/server';
-import { NewChallenge } from '@/types/challenge.type';
+import { ModifyChallenge, NewChallenge } from '@/types/challenge.type';
 import { Tables } from '@/types/supabase';
 import dayjs from 'dayjs';
 import { revalidatePath } from 'next/cache';
@@ -75,15 +75,24 @@ export async function addStickerToChallenge(goalId: number, sticker: string): Pr
 }
 
 /* 2.2 챌린지 정보 수정 */
-export async function updateChallengeInfo() {
+export async function updateChallengeInfo({
+  id,
+  category,
+  challenge_name,
+}: ModifyChallenge): Promise<ApiResponse<null>> {
   try {
     const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error('유저 없음');
 
-    // if (error) throw error;
-    // return { success: true, data };
+    const { error } = await supabase.from('challenges').update({ challenge_name, category }).eq('id', id).select();
+    if (error) throw new Error(`업데이트 실패: ${error.message}`);
+    return { status: 'success', data: null };
   } catch (e) {
     console.error('수정 실패:', e);
-    return { success: false, error: e instanceof Error ? e.message : 'Unknown error occurred' };
+    return { status: 'error', data: null };
   }
 }
 
