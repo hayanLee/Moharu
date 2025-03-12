@@ -42,7 +42,7 @@ export async function addStickerToChallenge(goalId: number, sticker: string): Pr
 
     const { data, error } = await supabase
       .from('challenges')
-      .select('completed_days')
+      .select('completed_days, period')
       .eq('id', goalId)
       .eq('user_id', user.id)
       .single();
@@ -55,7 +55,8 @@ export async function addStickerToChallenge(goalId: number, sticker: string): Pr
         .from('challenges')
         .update({
           last_updated: dayjs().format('YYYY-MM-DD'),
-          completed_days: data['completed_days'] as number,
+          completed_days: (data['completed_days'] + 1) as number,
+          end_day: data['completed_days'] + 1 === data['period'] ? dayjs().format('YYYY-MM-DD') : null,
         })
         .eq('id', goalId),
     ]);
