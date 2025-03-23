@@ -1,6 +1,5 @@
 'use client';
 import { addStickerToChallenge } from '@/app/actions/challengeActions';
-import { getAllStickers } from '@/app/actions/stickerAction';
 import { Button } from '@/components/ui/button';
 import {
   Drawer,
@@ -11,10 +10,11 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
+import useStickersQuery from '@/hooks/querys/useStickersQuery';
 import { cn } from '@/lib/utils';
 import supabaseLoader from '@/supabase/supabaseLoader';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 interface StickerDrawerProps {
   goalId: number;
@@ -24,17 +24,10 @@ interface StickerDrawerProps {
 
 const StickerDrawer = ({ goalId, disabled, today }: StickerDrawerProps) => {
   const [selectedSticker, setSelectedSticker] = useState<string>('');
-  const [stickers, setStickers] = useState<string[]>([]);
-  useEffect(() => {
-    const getStickers = async () => {
-      const { status, data } = await getAllStickers();
-      if (status === 'success') setStickers(data);
-    };
-    getStickers();
-  }, []);
+  const { data } = useStickersQuery();
+  const stickers = data?.data;
 
   const handleClick = (signedUrl: string) => setSelectedSticker(signedUrl);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await addStickerToChallenge(goalId, selectedSticker);
