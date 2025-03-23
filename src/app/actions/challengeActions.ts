@@ -58,6 +58,7 @@ export async function addStickerToChallenge(goalId: number, sticker: string): Pr
           last_updated: dayjs().format('YYYY-MM-DD'),
           completed_days: (data['completed_days'] + 1) as number,
           end_day: data['completed_days'] + 1 === data['period'] ? dayjs().format('YYYY-MM-DD') : null,
+          is_completed: data['completed_days'] + 1 === data['period'],
         })
         .eq('id', goalId),
     ]);
