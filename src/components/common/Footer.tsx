@@ -7,18 +7,18 @@ const Footer = () => {
   return (
     <div className='w-full bg-white'>
       <div className='flex justify-around items-center'>
-        <Button variant={'ghost'} asChild size={'full'} className='p-4'>
-          <Link href={GOALS_NEW} className='rounded-none'>
+        <Button variant={'ghost'} asChild size={'full'}>
+          <Link href={GOALS_NEW} className='rounded-none p-4'>
             <CirclePlus size={30} strokeWidth={2} />
           </Link>
         </Button>
-        <Button variant={'ghost'} asChild size={'full'} className='p-4'>
-          <Link href={HOME} className='rounded-none'>
+        <Button variant={'ghost'} asChild size={'full'}>
+          <Link href={HOME} className='rounded-none p-4'>
             <House size={30} strokeWidth={2} />
           </Link>
         </Button>
-        <Button variant={'ghost'} asChild size={'full'} className='p-4'>
-          <Link href={MILESTONE} className='rounded-none'>
+        <Button variant={'ghost'} asChild size={'full'}>
+          <Link href={MILESTONE} className='rounded-none p-4'>
             <LibraryBig size={30} strokeWidth={2} />
           </Link>
         </Button>
