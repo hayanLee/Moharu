@@ -65,75 +65,74 @@ const CreateGoalPage = () => {
   };
 
   return (
-    <div className='flex flex-col h-full my-3 gap-3'>
+    <form className='flex flex-col h-full gap-3' onSubmit={handleSubmit}>
       <div>
-        <h3 className='title my-3 '>1. Period</h3>
+        <h3 className='text-lg font-semibold sm:text-xl my-3'>챌린지명</h3>
+        <Input type='text' placeholder='이름을 입력하세요' name='challengeName' required className='py-6' />
+      </div>
+
+      <div>
+        <h3 className='text-lg font-semibold sm:text-xl my-3'>기간</h3>
         <div className='grid grid-cols-2 gap-2'>
           {PERIODS.map((value) => (
             <Button
+              type='button'
               key={value.period}
-              className={cn('p-3 border justify-start', period === value.period && 'bg-point')}
+              className={cn('sm:p-3 p-1 border justify-start', period === value.period && 'bg-point')}
               size={'full'}
               variant={'outline'}
               value={value.period}
               onClick={handlePeriodClick}
             >
               <span className='border rounded-full p-2 bg-gray-200 w-10 h-10 text-center'>{value.icon}</span>
-              <p className='text-lg'>
-                <span className='font-semibold'>{value.period}</span> 일
+              <p className='text-base sm:text-lg'>
+                <span className='font-semibold'>D-{value.period} </span>
               </p>
             </Button>
           ))}
         </div>
       </div>
 
-      <form className='flex flex-col gap-3' onSubmit={handleSubmit}>
-        <div>
-          <h3 className='title my-3'>2. Category</h3>
-          <RadioGroup defaultValue='Health' name='category'>
-            <div className='flex items-center space-x-2'>
-              <RadioGroupItem value='Health' id='Health' />
-              <Label htmlFor='Health' className='bg-red-300 p-0.5 rounded'>
-                Health
-              </Label>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <RadioGroupItem value='Self-care' id='Self-care' />
-              <Label htmlFor='Self-care' className='bg-blue-300 p-0.5 rounded'>
-                Self-care
-              </Label>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <RadioGroupItem value='Learning' id='Learning' />
-              <Label htmlFor='Learning' className='bg-green-300 p-0.5 rounded'>
-                Learning
-              </Label>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <RadioGroupItem value='Hobby' id='Hobby' />
-              <Label htmlFor='Hobby' className='bg-purple-300 p-0.5 rounded'>
-                Hobby
-              </Label>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <RadioGroupItem value='Work' id='Work' />
-              <Label htmlFor='Work' className='bg-yellow-300 p-0.5 rounded'>
-                Work
-              </Label>
-            </div>
-          </RadioGroup>
-        </div>
+      <div>
+        <h3 className='text-lg font-semibold sm:text-xl my-3'>카테고리</h3>
+        <RadioGroup defaultValue='Health' name='category'>
+          <div className='flex items-center space-x-2'>
+            <RadioGroupItem value='Health' id='Health' />
+            <Label htmlFor='Health' className='bg-red-300 px-2 py-1 rounded'>
+              Health
+            </Label>
+          </div>
+          <div className='flex items-center space-x-2'>
+            <RadioGroupItem value='Self-care' id='Self-care' />
+            <Label htmlFor='Self-care' className='bg-blue-300 px-2 py-1 rounded'>
+              Self-care
+            </Label>
+          </div>
+          <div className='flex items-center space-x-2'>
+            <RadioGroupItem value='Learning' id='Learning' />
+            <Label htmlFor='Learning' className='bg-green-300 px-2 py-1 rounded'>
+              Learning
+            </Label>
+          </div>
+          <div className='flex items-center space-x-2'>
+            <RadioGroupItem value='Hobby' id='Hobby' />
+            <Label htmlFor='Hobby' className='bg-purple-300 px-2 py-1 rounded'>
+              Hobby
+            </Label>
+          </div>
+          <div className='flex items-center space-x-2'>
+            <RadioGroupItem value='Work' id='Work' />
+            <Label htmlFor='Work' className='bg-yellow-300 px-2 py-1 rounded'>
+              Work
+            </Label>
+          </div>
+        </RadioGroup>
+      </div>
 
-        <div>
-          <h3 className='title my-3 '>3. Challenge name</h3>
-          <Input type='text' placeholder='이름을 입력하세요' name='challengeName' required className='py-6' />
-        </div>
-
-        <Button type='submit' className='text-base mt-10'>
-          Add New Habit
-        </Button>
-      </form>
-    </div>
+      <Button type='submit' className='text-base my-10'>
+        새로운 도전 시작하기
+      </Button>
+    </form>
   );
 };
 

@@ -38,7 +38,7 @@ const TrashButton = ({ goalId }: { goalId: number }) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>챌린지 삭제</AlertDialogTitle>
-          <AlertDialogDescription className='font-pretendard'>
+          <AlertDialogDescription>
             이 항목을 <span className='text-destructive font-semibold'>삭제</span>하시겠습니까? <br /> 삭제된 데이터는
             복구할 수 없습니다.
           </AlertDialogDescription>

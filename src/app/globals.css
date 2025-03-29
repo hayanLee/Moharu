@@ -2,26 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url('/fonts/nanum-square-round/NanumSquareRoundL.ttf') format('truetype');
+  font-weight: light;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url('/fonts/nanum-square-round/NanumSquareRoundR.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url('/fonts/nanum-square-round/NanumSquareRoundB.ttf') format('truetype');
+  font-weight: semi-bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url('/fonts/nanum-square-round/NanumSquareRoundEB.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 247, 247, 247;
-  --point: 38, 203, 77;
+  --point: #e9ff27;
   --gliter: linear-gradient(135deg, #ffd700, #ff69b4);
 }
 
 body {
   background-color: rgba(var(--background-rgb));
+  font-family: NanumSquareRound;
 }
 
 @layer utilities {
   .title {
-    @apply text-2xl font-semibold;
+    @apply text-xl sm:text-2xl font-semibold;
   }
   .day {
     @apply bg-gray-300 rounded-full flex justify-center items-center text-white/70 aspect-square border-2 sm:text-xl;
-  }
-  .font-pretendard {
-    font-family: pretendard;
   }
 }
 
