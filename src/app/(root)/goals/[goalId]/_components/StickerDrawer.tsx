@@ -37,16 +37,16 @@ const StickerDrawer = ({ goalId, disabled, today }: StickerDrawerProps) => {
     <Drawer>
       <DrawerTrigger disabled={disabled} asChild>
         <Button size={'lg'} className='mx-auto' disabled={disabled}>
-          {disabled ? '오늘은 스티커를 붙였어요!' : 'Add Sticker'}
+          {disabled ? '오늘은 스티커를 붙였어요!' : '오늘 날짜에 스티커 붙이기'}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className='max-h-[80vh]'>
           <DrawerHeader className='justify-center py-8'>
-            <DrawerTitle>✨ 오늘 붙일 스티커를 선택해 주세요 ✨</DrawerTitle>
+            <DrawerTitle className='font-medium'>✨ 오늘의 스티커를 선택해 주세요 ✨</DrawerTitle>
           </DrawerHeader>
 
-          <div className='rounded-md max-w-md mx-auto max-h-[50vh] overflow-y-auto scrollbar-hide'>
+          <div className='rounded-md max-w-md mx-auto max-h-[50vh] px-2 overflow-y-auto scrollbar-hide'>
             <div className='grid grid-cols-3 sm:grid-cols-4 gap-4'>
               {stickers?.map((sticker) => (
                 <div
@@ -74,7 +74,7 @@ const StickerDrawer = ({ goalId, disabled, today }: StickerDrawerProps) => {
             <DrawerClose>
               <form onSubmit={handleSubmit}>
                 <Button type='submit' size={'lg'} disabled={!selectedSticker}>
-                  Submit
+                  제출
                 </Button>
               </form>
             </DrawerClose>

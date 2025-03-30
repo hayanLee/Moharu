@@ -30,10 +30,10 @@ const GoalDetailPage = async ({ params: { goalId } }: GoalDetailProps) => {
 
   return (
     <div className='grid grid-rows-[auto_1fr_auto] gap-3 sm:gap-5 h-full mb-3'>
-      <div className='flex justify-between items-center'>
+      <div className='flex justify-between items-center overflow-hidden'>
         <div>
-          <h3 className='text-xl font-semibold'>{challenge_name}</h3>
-          <p className='text-gray-500'>
+          <h3 className='text-lg sm:text-xl font-semibold'>{challenge_name}</h3>
+          <p className='text-sm sm:text-base text-gray-500'>
             {start_day} ~ {is_completed && end_day}
           </p>
         </div>

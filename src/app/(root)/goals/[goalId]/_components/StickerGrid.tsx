@@ -14,7 +14,7 @@ const StickerGrid = ({ period, progress }: StickerGridProps) => {
       {Array.from({ length: period }, (_, idx) => {
         const sticker = progress?.[idx];
         return sticker ? (
-          <div className='day !bg-white relative overflow-hidden' key={idx}>
+          <div className='day border-point !bg-white relative overflow-hidden' key={idx}>
             <Image
               src={`stickers/${sticker.sticker_img}`}
               alt='Picture of Sticker'
