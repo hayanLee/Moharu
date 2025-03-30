@@ -45,50 +45,48 @@ const LoginPage = () => {
     }
   };
   return (
-    <div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-          <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder='email' type='email' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='password'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input placeholder='password' type='password' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 w-1/2'>
+        <FormField
+          control={form.control}
+          name='email'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder='email' type='email' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='password'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input placeholder='password' type='password' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className='flex flex-col items-center gap-4 w-full'>
-            <Button type='submit' className='w-full'>
-              로그인
-            </Button>
-            <Button asChild className='w-full'>
-              <Link href={SIGNUP}>회원가입</Link>
-            </Button>
-            <Button asChild variant={'outline'} className='w-full'>
-              <Link href={INTRO}>Cancel</Link>
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        <div className='flex flex-col items-center gap-4 w-full'>
+          <Button type='submit' className='w-full'>
+            로그인
+          </Button>
+          <Button asChild className='w-full'>
+            <Link href={SIGNUP}>회원가입</Link>
+          </Button>
+          <Button asChild variant={'outline'} className='w-full'>
+            <Link href={INTRO}>Cancel</Link>
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 

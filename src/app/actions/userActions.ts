@@ -50,8 +50,10 @@ export async function logIn({ email, password }: { email: string; password: stri
 export async function logOut() {
   try {
     const supabase = createClient();
+    const { error } = await supabase.auth.signOut();
+    if (error) throw new Error(error.message);
   } catch (e) {
-    console.error('등록 실패:', e);
+    console.error('로그아웃 실패:', e);
     return { success: false, error: e instanceof Error ? e.message : 'Unknown error occurred' };
   }
 }

@@ -1,5 +1,5 @@
 'use client';
-import { getUserInfo, updateUserProfile } from '@/app/actions/userActions';
+import { getUserInfo, logOut, updateUserProfile } from '@/app/actions/userActions';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -24,6 +24,8 @@ const SettingsPage = () => {
       description: '',
     },
   });
+
+  const onClickLogOut = () => logOut();
 
   useEffect(() => {
     const getUserPrevInfo = async () => {
@@ -59,58 +61,61 @@ const SettingsPage = () => {
     }
   };
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-3 py-4'>
-        <FormField
-          control={form.control}
-          name='nickname'
-          render={({ field }) => (
-            <div className='grid grid-cols-[1fr_4fr] items-center gap-4'>
-              <FormLabel>닉네임</FormLabel>
-              <FormControl>
-                <Input placeholder='닉네임을 입력해주세요' {...field} />
-              </FormControl>
-            </div>
-          )}
-        />
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-3 py-4'>
+          <FormField
+            control={form.control}
+            name='nickname'
+            render={({ field }) => (
+              <div className='grid grid-cols-[1fr_4fr] items-center gap-4'>
+                <FormLabel>닉네임</FormLabel>
+                <FormControl>
+                  <Input placeholder='닉네임을 입력해주세요' {...field} />
+                </FormControl>
+              </div>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name='profileUrl'
-          render={({ field: { onChange, value, ...rest } }) => (
-            <div className='grid grid-cols-[1fr_4fr] items-center gap-4'>
-              <FormLabel>프로필</FormLabel>
-              <FormControl>
-                <Input
-                  type='file'
-                  accept='image/*'
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    onChange(file ?? null);
-                  }}
-                  {...rest}
-                />
-              </FormControl>
-            </div>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name='profileUrl'
+            render={({ field: { onChange, value, ...rest } }) => (
+              <div className='grid grid-cols-[1fr_4fr] items-center gap-4'>
+                <FormLabel>프로필</FormLabel>
+                <FormControl>
+                  <Input
+                    type='file'
+                    accept='image/*'
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      onChange(file ?? null);
+                    }}
+                    {...rest}
+                  />
+                </FormControl>
+              </div>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name='description'
-          render={({ field }) => (
-            <div className='grid grid-cols-[1fr_4fr] items-center gap-4'>
-              <FormLabel>한마디</FormLabel>
-              <FormControl>
-                <Input placeholder='나를 위한 한마디' {...field} />
-              </FormControl>
-            </div>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name='description'
+            render={({ field }) => (
+              <div className='grid grid-cols-[1fr_4fr] items-center gap-4'>
+                <FormLabel>한마디</FormLabel>
+                <FormControl>
+                  <Input placeholder='나를 위한 한마디' {...field} />
+                </FormControl>
+              </div>
+            )}
+          />
 
-        <Button type='submit'>변경</Button>
-      </form>
-    </Form>
+          <Button type='submit'>변경</Button>
+        </form>
+      </Form>
+      <Button onClick={onClickLogOut}>로그아웃</Button>
+    </>
   );
 };
 
