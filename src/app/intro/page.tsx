@@ -1,11 +1,11 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { LOGIN, SIGNUP } from '@/constant/pathname';
-import useLoginMutation from '@/hooks/mutations/useLoginMutation';
+import useOAuthLogIn from '@/hooks/mutations/useOAuthLogin';
 import Link from 'next/link';
 
 const IntroPage = () => {
-  const { mutate } = useLoginMutation();
+  const { mutate } = useOAuthLogIn();
   const handleLoginClick = () => mutate('kakao');
   return (
     <div className='flex flex-col gap-10 w-1/2'>

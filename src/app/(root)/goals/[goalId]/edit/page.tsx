@@ -1,40 +1,27 @@
 'use client';
-import { fetchChallengeById, updateChallengeInfo } from '@/app/actions/challengeActions';
+import { fetchChallengeById } from '@/app/actions/challengeActions';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useToast } from '@/hooks/use-toast';
+import useUpdateChallenge from '@/hooks/mutations/useUpdateChallenge';
 import { cn } from '@/lib/utils';
 import { CircleArrowLeft } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
-
-const PERIODS = [
-  { period: 3, icon: '🕒' },
-  { period: 7, icon: '📆' },
-  { period: 14, icon: '📅' },
-  { period: 30, icon: '🗓️' },
-];
-
-const CATEGORY = [
-  { title: 'Health', color: 'red' },
-  { title: 'Self-care', color: 'blue' },
-  { title: 'Learning', color: 'green' },
-  { title: 'Hobby', color: 'purple' },
-  { title: 'Work', color: 'yellow' },
-];
+import { CATEGORY, PERIODS } from '../_constants/constant';
 
 const EditPage = () => {
-  const { toast } = useToast();
   const { goalId } = useParams();
   const router = useRouter();
+  const { mutate } = useUpdateChallenge();
 
   const form = useForm({
+    mode: 'onBlur',
     defaultValues: {
       period: 3,
-      category: 'Work',
+      category: 'Health',
       challengeName: '',
     },
   });
@@ -54,22 +41,8 @@ const EditPage = () => {
 
   const onSubmit = async (values: FieldValues) => {
     const { category, challengeName: challenge_name } = values;
-    const result = await updateChallengeInfo({ id: Number(goalId), category, challenge_name });
-
-    if (result.status === 'success') {
-      router.back();
-      return toast({
-        title: '챌린지 수정 완료',
-        description: '챌린지가 수정되었습니다!',
-        duration: 2000,
-      });
-    } else {
-      return toast({
-        title: '챌린지 수정 실패',
-        description: '문제가 발생했습니다. 다시 시도해주세요.',
-        variant: 'destructive',
-      });
-    }
+    const updateChallegeInfo = { id: Number(goalId), category, challenge_name };
+    mutate(updateChallegeInfo);
   };
 
   const goBack = () => router.back();
@@ -82,12 +55,16 @@ const EditPage = () => {
 
       <Form {...form}>
         <form className='flex flex-col h-full gap-3' onSubmit={form.handleSubmit(onSubmit)}>
+          <h3 className='text-lg font-semibold sm:text-xl my-3'>챌린지명</h3>
           <FormField
             control={form.control}
             name='challengeName'
+            rules={{
+              required: '챌린지명은 필수입니다.',
+              maxLength: { value: 20, message: '최대 20자 이내로 작성해주세요' },
+            }}
             render={({ field }) => (
               <FormItem>
-                <h3 className='text-lg font-semibold sm:text-xl my-3'>챌린지명</h3>
                 <FormControl>
                   <Input type='text' placeholder='이름을 입력하세요' required className='py-6' {...field} />
                 </FormControl>
@@ -96,15 +73,16 @@ const EditPage = () => {
             )}
           />
 
+          <h3 className='text-lg font-semibold sm:text-xl my-3'>기간</h3>
           <FormField
             control={form.control}
             name='period'
             render={({ field }) => (
               <div>
-                <h3 className='text-lg font-semibold sm:text-xl my-3'>기간</h3>
                 <div className='grid grid-cols-2 gap-2'>
                   {PERIODS.map((value) => (
                     <Button
+                      type='button'
                       key={value.period}
                       className={cn('sm:p-3 p-1 border justify-start', value.period === field.value && 'bg-point')}
                       size={'full'}
@@ -123,26 +101,21 @@ const EditPage = () => {
             )}
           />
 
+          <h3 className='text-lg font-semibold sm:text-xl my-3'>카테고리</h3>
           <FormField
             control={form.control}
             name='category'
             render={({ field }) => (
-              <FormItem>
-                <h3 className='text-lg font-semibold sm:text-xl my-3'>카테고리</h3>
-                <FormControl>
-                  <RadioGroup defaultValue={field.value} onValueChange={field.onChange}>
-                    {CATEGORY.map((category) => (
-                      <div className='flex items-center space-x-2' key={category.title}>
-                        <RadioGroupItem value={category.title} id={category.title} />
-                        <FormLabel htmlFor={category.title} className={`bg-${category.color}-300 px-2 py-1 rounded`}>
-                          {category.title}
-                        </FormLabel>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <RadioGroup value={field.value} onValueChange={field.onChange}>
+                {CATEGORY.map((category) => (
+                  <div className='flex items-center space-x-2' key={category.title}>
+                    <RadioGroupItem value={category.title} id={category.title} />
+                    <FormLabel htmlFor={category.title} className={`bg-${category.color}-300 px-2 py-1 rounded`}>
+                      {category.title}
+                    </FormLabel>
+                  </div>
+                ))}
+              </RadioGroup>
             )}
           />
 

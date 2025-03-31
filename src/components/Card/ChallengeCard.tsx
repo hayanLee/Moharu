@@ -1,16 +1,8 @@
+import { CATEGORY_BG } from '@/app/(root)/goals/[goalId]/_constants/constant';
 import { cn } from '@/lib/utils';
 import { Tables } from '@/types/supabase';
 import dayjs from 'dayjs';
 import { Goal } from 'lucide-react';
-
-const categoryColors: Record<string, string> = {
-  Health: 'bg-red-300',
-  'Self-care': 'bg-blue-300',
-  Learning: 'bg-green-300',
-  Hobby: 'bg-purple-300',
-  Work: 'bg-yellow-300',
-};
-const now = dayjs().format('YYYY-MM-DD');
 
 const ChallengeCard = ({ habit, success }: { habit: Tables<'challenges'>; success?: boolean }) => {
   const isFinished = !!habit.end_day;
@@ -24,8 +16,8 @@ const ChallengeCard = ({ habit, success }: { habit: Tables<'challenges'>; succes
         isFinished ? 'bg-gliter animate-glitter my-3' : success && 'bg-point'
       )}
     >
-      <div className='grow flex flex-col gap-4'>
-        <div className='w-[70%]'>
+      <div className='grow flex flex-col gap-4 min-w-0'>
+        <div>
           <h4 className='sm:text-lg font-semibold text-ellipsis text-nowrap overflow-hidden'>{habit.challenge_name}</h4>
           <p className='rounded text-gray-500 text-xs sm:text-sm flex items-center'>
             {habit.start_day} ~ {isFinished && habit.end_day}
@@ -33,10 +25,7 @@ const ChallengeCard = ({ habit, success }: { habit: Tables<'challenges'>; succes
         </div>
 
         <span
-          className={cn(
-            'text-xs sm:text-sm w-fit rounded py-1 px-2',
-            categoryColors[habit.category] || 'text-gray-700'
-          )}
+          className={cn('text-xs sm:text-sm w-fit rounded py-1 px-2', CATEGORY_BG[habit.category] || 'text-gray-700')}
         >
           #{habit.category}
         </span>

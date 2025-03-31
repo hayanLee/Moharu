@@ -1,7 +1,5 @@
 'use server';
 import { createClient } from '@/supabase/server';
-import { revalidatePath } from 'next/cache';
-import { ApiResponse, UserInfo } from './types/response';
 
 /*
  * 유저 액션
@@ -52,6 +50,7 @@ export async function logOut() {
     const supabase = createClient();
     const { error } = await supabase.auth.signOut();
     if (error) throw new Error(error.message);
+    return { success: true };
   } catch (e) {
     console.error('로그아웃 실패:', e);
     return { success: false, error: e instanceof Error ? e.message : 'Unknown error occurred' };
@@ -59,7 +58,7 @@ export async function logOut() {
 }
 
 /* 4. 회원정보 수정 */
-export async function updateUserProfile(formData: FormData): Promise<ApiResponse<null>> {
+export async function updateUserProfile(formData: FormData) {
   try {
     const supabase = createClient();
     const {
@@ -71,25 +70,13 @@ export async function updateUserProfile(formData: FormData): Promise<ApiResponse
     const newProfile = formData.get('profileUrl') as File;
     const newDescription = formData.get('description');
 
-    if (newProfile) {
-      const fileExtension = newProfile.name.split('.').pop();
-      const { error: ImageUploadError } = await supabase.storage
-        .from('profile')
-        .update(`${user.id}/profile.${fileExtension}`, newProfile, {
-          cacheControl: '3600',
-          upsert: true,
-        });
-      if (ImageUploadError) throw new Error(`이미지 스토리지 업로드 실패 : ${ImageUploadError.message}`);
-
-      await updateUserField(user.id, 'profile_url', `profile/${user.id}/profile.${fileExtension}`);
-    }
+    if (newProfile) await updateProfileImage(user.id, newProfile);
     if (newNickname) await updateUserField(user.id, 'nickname', newNickname);
     if (newDescription) await updateUserField(user.id, 'description', newDescription);
+    return { success: true };
   } catch (e) {
-    return { status: 'error', data: null };
-  } finally {
-    revalidatePath('/', 'page');
-    return { status: 'success', data: null };
+    console.error('프로필 업데이트 실패:', e);
+    return { success: false, error: e instanceof Error ? e.message : 'Unknown error occurred' };
   }
 }
 
@@ -103,8 +90,31 @@ async function updateUserField(userId: string, field: string, value: any) {
   if (error) throw new Error(`${field} 업데이트 실패: ${error.message}`);
 }
 
+/* 4.3 유저 프로필 이미지 업데이트 */
+async function updateProfileImage(userId: string, newProfile: File) {
+  try {
+    const supabase = createClient();
+    const fileExtension = newProfile.name.split('.').pop(); // 확장자
+    const { error: ImageUploadError } = await supabase.storage
+      .from('profile')
+      .update(`${userId}/profile.${fileExtension}`, newProfile, {
+        cacheControl: '3600',
+        upsert: true,
+      });
+
+    if (ImageUploadError) throw new Error(`이미지 스토리지 업로드 실패: ${ImageUploadError.message}`);
+    const profileUrl = `profile/${userId}/profile.${fileExtension}`;
+
+    // db 갱신
+    await updateUserField(userId, 'profile_url', profileUrl);
+  } catch (e) {
+    console.error('프로필 이미지 업데이트 실패:', e);
+    return { success: false, error: e instanceof Error ? e.message : 'Unknown error occurred' };
+  }
+}
+
 /* 5. 회원정보 조회 */
-export async function getUserInfo(): Promise<ApiResponse<UserInfo>> {
+export async function getUserInfo() {
   try {
     const supabase = createClient();
     const {
@@ -118,9 +128,9 @@ export async function getUserInfo(): Promise<ApiResponse<UserInfo>> {
       .eq('id', user.id)
       .single();
     if (error) throw new Error(`유저 정보 조회 실패 : : ${error.message}`);
-    return { status: 'success', data };
+    return { success: true, data };
   } catch (e) {
     console.error('등록 실패:', e);
-    return { status: 'error', data: { nickname: '', profile_url: '', description: '' } };
+    return { success: false, data: { nickname: '', profile_url: '', description: '' } };
   }
 }

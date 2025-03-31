@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
-const useLoginMutation = () => {
+const useOAuthLogIn = () => {
   const router = useRouter();
   return useMutation({
     mutationFn: async (provider?: string) => {
@@ -16,4 +16,4 @@ const useLoginMutation = () => {
   });
 };
 
-export default useLoginMutation;
+export default useOAuthLogIn;

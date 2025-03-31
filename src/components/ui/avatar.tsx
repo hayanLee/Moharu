@@ -22,8 +22,9 @@ const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
 >(({ className, src, ...props }, ref) => {
-  const imageSrc = src ? supabaseLoader({ src }) : supabaseLoader({ src: 'profile/default.jpg' });
-
+  const imageSrc = React.useMemo(() => {
+    return supabaseLoader({ src: src || 'profile/default.jpg' });
+  }, [src]);
   return (
     <AvatarPrimitive.Image
       ref={ref}

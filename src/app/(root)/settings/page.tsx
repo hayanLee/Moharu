@@ -1,10 +1,12 @@
 'use client';
-import { getUserInfo, logOut, updateUserProfile } from '@/app/actions/userActions';
+import { getUserInfo } from '@/app/actions/userActions';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import { useEffect, useState } from 'react';
+import useLogOut from '@/hooks/mutations/useLogout';
+import useUpdateProfile from '@/hooks/mutations/useUpdateProfile';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -14,8 +16,11 @@ const formSchema = z.object({
   description: z.string().optional(),
 });
 const SettingsPage = () => {
-  const { toast } = useToast();
-  const [open, setOpen] = useState(false);
+  const { mutate } = useUpdateProfile();
+  const { mutate: logoutMuate } = useLogOut();
+
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'onBlur',
     defaultValues: {
@@ -25,7 +30,7 @@ const SettingsPage = () => {
     },
   });
 
-  const onClickLogOut = () => logOut();
+  const onClickLogOut = () => logoutMuate();
 
   useEffect(() => {
     const getUserPrevInfo = async () => {
@@ -40,25 +45,10 @@ const SettingsPage = () => {
 
   const onSubmit = async (values: FieldValues) => {
     const formData = new FormData();
-
-    if (!Object.keys(form.formState.dirtyFields).length) {
-      return toast({
-        title: '변경사항 없음',
-        description: '변경사항이 없습니다.',
-      });
-    }
-
     for (const key in form.formState.dirtyFields) {
       formData.append(key, values[key]);
     }
-    const { status } = await updateUserProfile(formData);
-    if (status === 'success') {
-      toast({
-        title: '프로필 변경 성공',
-        description: '프로필이 정상적으로 변경되었습니다.',
-      });
-      setOpen(false);
-    }
+    mutate(formData);
   };
   return (
     <>
@@ -111,7 +101,9 @@ const SettingsPage = () => {
             )}
           />
 
-          <Button type='submit'>변경</Button>
+          <Button type='submit' disabled={!Object.keys(form.formState.dirtyFields).length}>
+            변경
+          </Button>
         </form>
       </Form>
       <Button onClick={onClickLogOut}>로그아웃</Button>

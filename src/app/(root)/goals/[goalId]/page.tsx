@@ -1,6 +1,8 @@
+'use client';
 import { fetchChallengeById } from '@/app/actions/challengeActions';
 import TrashButton from '@/components/Button/TrashButton';
 import { GOAL_EDIT } from '@/constant/pathname';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { PencilLine } from 'lucide-react';
 import Link from 'next/link';
@@ -11,27 +13,26 @@ type GoalDetailProps = {
   params: { goalId: string };
 };
 
-const GoalDetailPage = async ({ params: { goalId } }: GoalDetailProps) => {
-  const numericGoalId = Number(goalId);
-  const singleChallenge = await fetchChallengeById(numericGoalId);
+const GoalDetailPage = ({ params: { goalId } }: GoalDetailProps) => {
+  const { data, isPending } = useQuery({
+    queryKey: ['challenge', goalId],
+    queryFn: () => fetchChallengeById(Number(goalId)),
+  });
 
-  if (singleChallenge.status === 'error') {
-    return <div className='text-red-500'>챌린지 데이터를 가져오는 데 실패했습니다.</div>;
-  }
-
-  const { challenge, progress } = singleChallenge.data || {};
-  if (!challenge) {
-    return <div className='text-red-500'>챌린지를 찾을 수 없습니다.</div>;
-  }
-
-  const { challenge_name, start_day, end_day, period, is_completed, last_updated } = challenge;
+  if (!data || isPending) return <>로딩중</>;
+  const {
+    data: {
+      challenge: { challenge_name, start_day, end_day, period, is_completed, last_updated },
+      progress,
+    },
+  } = data;
   const today = dayjs().format('YYYY-MM-DD');
   const todaySticker = !is_completed && last_updated !== today;
 
   return (
     <div className='grid grid-rows-[auto_1fr_auto] gap-3 sm:gap-5 h-full mb-3'>
       <div className='flex justify-between items-center overflow-hidden'>
-        <div>
+        <div className='min-w-0'>
           <h3 className='text-lg sm:text-xl font-semibold'>{challenge_name}</h3>
           <p className='text-sm sm:text-base text-gray-500'>
             {start_day} ~ {is_completed && end_day}
@@ -41,7 +42,7 @@ const GoalDetailPage = async ({ params: { goalId } }: GoalDetailProps) => {
           <Link href={GOAL_EDIT(goalId)}>
             <PencilLine />
           </Link>
-          <TrashButton goalId={numericGoalId} />
+          <TrashButton goalId={Number(goalId)} />
         </div>
       </div>
 
@@ -49,7 +50,7 @@ const GoalDetailPage = async ({ params: { goalId } }: GoalDetailProps) => {
         <StickerGrid period={period} progress={progress} />
       </div>
 
-      {!is_completed && <StickerDrawer goalId={numericGoalId} disabled={!todaySticker} today={today} />}
+      {!is_completed && <StickerDrawer goalId={Number(goalId)} disabled={!todaySticker} today={today} />}
     </div>
   );
 };

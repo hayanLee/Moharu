@@ -9,7 +9,7 @@ import { ModifyChallenge, NewChallenge } from '@/types/challenge.type';
 import { Tables } from '@/types/supabase';
 import dayjs from 'dayjs';
 import { revalidatePath } from 'next/cache';
-import { AllChallenges, ApiResponse, SingleChallenge } from './types/response';
+import { ApiResponse } from './types/response';
 
 /* 1. 챌린지 추가 */
 export async function createChallenge(newChallenge: NewChallenge) {
@@ -24,7 +24,6 @@ export async function createChallenge(newChallenge: NewChallenge) {
     const { error } = await supabase.from('challenges').insert(newChallenge);
     if (error) throw error;
 
-    revalidatePath('/', 'page');
     return { success: true };
   } catch (e) {
     console.error('등록 실패:', e);
@@ -76,11 +75,7 @@ export async function addStickerToChallenge(goalId: number, sticker: string): Pr
 }
 
 /* 2.2 챌린지 정보 수정 */
-export async function updateChallengeInfo({
-  id,
-  category,
-  challenge_name,
-}: ModifyChallenge): Promise<ApiResponse<null>> {
+export async function updateChallengeInfo({ id, category, challenge_name }: ModifyChallenge) {
   try {
     const supabase = createClient();
     const {
@@ -90,15 +85,15 @@ export async function updateChallengeInfo({
 
     const { error } = await supabase.from('challenges').update({ challenge_name, category }).eq('id', id).select();
     if (error) throw new Error(`업데이트 실패: ${error.message}`);
-    return { status: 'success', data: null };
+    return { success: true, data: null };
   } catch (e) {
     console.error('수정 실패:', e);
-    return { status: 'error', data: null };
+    return { success: false, data: null };
   }
 }
 
 /* 3. 챌린지 삭제 */
-export async function deleteChallenge(goalId: number): Promise<ApiResponse<null>> {
+export async function deleteChallenge(goalId: number) {
   try {
     const supabase = createClient();
     const {
@@ -107,16 +102,16 @@ export async function deleteChallenge(goalId: number): Promise<ApiResponse<null>
     if (!user) throw new Error('유저 없음');
 
     const response = await supabase.from('challenges').delete().eq('id', goalId);
-    if (response.status === 204) return { status: 'success', data: null };
+    if (response.status === 204) return { success: true };
     else throw new Error('삭제 실패');
   } catch (e) {
     console.error('삭제 실패:', e);
-    return { status: 'error', data: null };
+    return { success: false };
   }
 }
 
 /* 4. 모든 챌린지 정보 가져오기 */
-export async function fetchChallenges(): Promise<ApiResponse<AllChallenges>> {
+export async function fetchChallenges() {
   try {
     const supabase = createClient();
 
@@ -135,17 +130,17 @@ export async function fetchChallenges(): Promise<ApiResponse<AllChallenges>> {
     if (error) throw error;
 
     return {
-      status: 'success',
+      success: true,
       data: { todayUntillDone, todayDone },
     };
   } catch (e) {
     console.error('조회 실패:', e);
-    return { status: 'error', data: { todayUntillDone: [], todayDone: [] } };
+    return { success: false, data: { todayUntillDone: [], todayDone: [] } };
   }
 }
 
 /* 5. 특정 챌린지 정보 가져오기 */
-export async function fetchChallengeById(id: number): Promise<ApiResponse<SingleChallenge>> {
+export async function fetchChallengeById(id: number) {
   try {
     const supabase = createClient();
     const {
@@ -167,7 +162,7 @@ export async function fetchChallengeById(id: number): Promise<ApiResponse<Single
 
     if (error) throw error;
     return {
-      status: 'success',
+      success: true,
       data: {
         challenge: data,
         progress: data?.progress ?? [],
@@ -176,7 +171,7 @@ export async function fetchChallengeById(id: number): Promise<ApiResponse<Single
   } catch (e) {
     console.error('조회 실패:', e);
     return {
-      status: 'error',
+      success: false,
       data: {
         challenge: null,
         progress: [],

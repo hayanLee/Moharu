@@ -1,15 +1,25 @@
+'use client';
 import { getUserInfo } from '@/app/actions/userActions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SETTINGS } from '@/constant/pathname';
-import { ContactRound } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Skeleton } from '../ui/skeleton';
+import ProfileSkeleton from './ProfileSkeleton';
 
-const Profile = async () => {
+const Profile = () => {
+  const { data, isPending } = useQuery({
+    queryKey: ['profile'],
+    queryFn: async () => await getUserInfo(),
+  });
+
+  if (!data || isPending) return <ProfileSkeleton />;
   const {
     data: { nickname, profile_url, description },
-  } = await getUserInfo();
+  } = data;
+
   return (
     <div className='flex items-center gap-3 py-3 sm:py-5'>
       <Avatar className='w-16 h-16'>
@@ -26,7 +36,7 @@ const Profile = async () => {
 
       <Link href={SETTINGS}>
         <Button variant={'ghost'} size={'icon'}>
-          <ContactRound />
+          <Settings />
         </Button>
       </Link>
     </div>
