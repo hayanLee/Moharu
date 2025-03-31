@@ -10,6 +10,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        nanumSquareRound: ['var(--font-nanumSquareRound)'],
+      },
       colors: {
         foreground: 'hsl(var(--foreground))',
         background: 'hsl(var(--background))',

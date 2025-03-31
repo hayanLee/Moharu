@@ -1,6 +1,33 @@
 import Providers from '@/providers';
 import type { Metadata } from 'next';
+import localFont from 'next/font/local';
 import './globals.css';
+
+const nanumSquareRound = localFont({
+  src: [
+    {
+      path: './fonts/nanum-square-round/NanumSquareRoundEB.ttf',
+      weight: '800',
+      style: 'normal',
+    },
+    {
+      path: './fonts/nanum-square-round/NanumSquareRoundB.ttf',
+      weight: '600',
+      style: 'normal',
+    },
+    {
+      path: './fonts/nanum-square-round/NanumSquareRoundR.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/nanum-square-round/NanumSquareRoundL.ttf',
+      weight: '300',
+      style: 'normal',
+    },
+  ],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: '모하루(Moharu)',
@@ -16,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='ko'>
+    <html lang='ko' className={nanumSquareRound.className}>
       <body>
         <Providers>{children}</Providers>
       </body>
