@@ -24,14 +24,14 @@ const CreateGoalPage = () => {
   });
 
   const onSubmit = async (values: FieldValues) => {
-    const newChallengeDate: NewChallenge = {
+    const newChallenge: NewChallenge = {
       category: form.getValues('category'),
       challenge_name: form.getValues('challengeName'),
       start_day: now.format('YYYY-MM-DD'),
       period: Number(form.getValues('period')),
     };
 
-    mutate(newChallengeDate);
+    mutate(newChallenge);
   };
 
   return (
@@ -63,7 +63,6 @@ const CreateGoalPage = () => {
             <div className='grid grid-cols-2 gap-2'>
               {PERIODS.map((value) => (
                 <Button
-                  {...field}
                   type='button'
                   key={value.period}
                   className={cn('sm:p-3 p-1 border justify-start', field.value === value.period && 'bg-point')}
@@ -90,7 +89,7 @@ const CreateGoalPage = () => {
           control={form.control}
           name='category'
           render={({ field }) => (
-            <RadioGroup defaultValue='Health' name='category'>
+            <RadioGroup value={field.value} onValueChange={field.onChange} name='category'>
               {CATEGORY.map((category) => (
                 <div className='flex items-center space-x-2' key={category.title}>
                   <RadioGroupItem value={category.title} id={category.title} />
