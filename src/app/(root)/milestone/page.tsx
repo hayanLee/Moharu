@@ -1,10 +1,13 @@
-import { getEndedChallenge } from '@/app/actions/challengeActions';
+'use client';
 import ChallengeCard from '@/components/Card/ChallengeCard';
 import { GOAL_DETAIL } from '@/constant/pathname';
+import useMileStones from '@/hooks/querys/useMileStones';
 import Link from 'next/link';
 
-const StickersPage = async () => {
-  const { data: finishedGoals } = await getEndedChallenge();
+const StickersPage = () => {
+  const { data, isPending } = useMileStones();
+  if (!data || isPending) return <>로딩중</>;
+  const { data: finishedGoals } = data;
 
   return (
     <div className='flex flex-col h-full'>

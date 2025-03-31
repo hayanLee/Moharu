@@ -1,4 +1,5 @@
 import { updateUserProfile } from '@/app/actions/userActions';
+import { queryKeys } from '@/services/queryKeys';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../use-toast';
@@ -12,7 +13,7 @@ const useUpdateProfile = () => {
     onSuccess: (data) => {
       if (data.success) {
         router.back();
-        queryClient.invalidateQueries({ queryKey: ['profile'] });
+        queryClient.invalidateQueries({ queryKey: queryKeys.profile });
         return toast({
           title: '프로필 변경 성공',
           description: '프로필이 정상적으로 변경되었습니다.',

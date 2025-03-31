@@ -1,5 +1,4 @@
 'use client';
-import { addStickerToChallenge } from '@/app/actions/challengeActions';
 import { Button } from '@/components/ui/button';
 import {
   Drawer,
@@ -10,28 +9,27 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
+import useAddSticker from '@/hooks/mutations/useAddSticker';
 import useStickersQuery from '@/hooks/querys/useStickersQuery';
 import { cn } from '@/lib/utils';
 import supabaseLoader from '@/supabase/supabaseLoader';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface StickerDrawerProps {
-  goalId: number;
+  goalId: string;
   disabled: boolean;
-  today: string;
 }
 
-const StickerDrawer = ({ goalId, disabled, today }: StickerDrawerProps) => {
+const StickerDrawer = ({ goalId, disabled }: StickerDrawerProps) => {
   const [selectedSticker, setSelectedSticker] = useState<string>('');
-  const { data } = useStickersQuery();
-  const stickers = data?.data;
+  const { data, isPending } = useStickersQuery();
+  const { mutate } = useAddSticker();
+  if (!data || isPending) return <>로딩중</>;
+  const { data: stickers } = data;
 
   const handleClick = (signedUrl: string) => setSelectedSticker(signedUrl);
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await addStickerToChallenge(goalId, selectedSticker);
-  };
+  const handleSubmit = () => mutate({ goalId, selectedSticker });
 
   return (
     <Drawer>
@@ -72,11 +70,9 @@ const StickerDrawer = ({ goalId, disabled, today }: StickerDrawerProps) => {
 
           <DrawerFooter>
             <DrawerClose>
-              <form onSubmit={handleSubmit}>
-                <Button type='submit' size={'lg'} disabled={!selectedSticker}>
-                  제출
-                </Button>
-              </form>
+              <Button type='submit' size={'lg'} disabled={!selectedSticker} onClick={handleSubmit}>
+                제출
+              </Button>
             </DrawerClose>
           </DrawerFooter>
         </div>

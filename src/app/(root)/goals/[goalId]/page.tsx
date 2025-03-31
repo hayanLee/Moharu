@@ -1,8 +1,7 @@
 'use client';
-import { fetchChallengeById } from '@/app/actions/challengeActions';
 import TrashButton from '@/components/Button/TrashButton';
 import { GOAL_EDIT } from '@/constant/pathname';
-import { useQuery } from '@tanstack/react-query';
+import useDetailChallenge from '@/hooks/querys/useDetailChallenge';
 import dayjs from 'dayjs';
 import { PencilLine } from 'lucide-react';
 import Link from 'next/link';
@@ -14,10 +13,7 @@ type GoalDetailProps = {
 };
 
 const GoalDetailPage = ({ params: { goalId } }: GoalDetailProps) => {
-  const { data, isPending } = useQuery({
-    queryKey: ['challenge', goalId],
-    queryFn: () => fetchChallengeById(Number(goalId)),
-  });
+  const { data, isPending } = useDetailChallenge(goalId);
 
   if (!data || isPending) return <>로딩중</>;
   const {
@@ -50,7 +46,7 @@ const GoalDetailPage = ({ params: { goalId } }: GoalDetailProps) => {
         <StickerGrid period={period} progress={progress} />
       </div>
 
-      {!is_completed && <StickerDrawer goalId={Number(goalId)} disabled={!todaySticker} today={today} />}
+      {!is_completed && <StickerDrawer goalId={goalId} disabled={!todaySticker} />}
     </div>
   );
 };

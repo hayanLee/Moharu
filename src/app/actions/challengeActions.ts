@@ -6,10 +6,7 @@
 
 import { createClient } from '@/supabase/server';
 import { ModifyChallenge, NewChallenge } from '@/types/challenge.type';
-import { Tables } from '@/types/supabase';
 import dayjs from 'dayjs';
-import { revalidatePath } from 'next/cache';
-import { ApiResponse } from './types/response';
 
 /* 1. 챌린지 추가 */
 export async function createChallenge(newChallenge: NewChallenge) {
@@ -32,7 +29,7 @@ export async function createChallenge(newChallenge: NewChallenge) {
 }
 
 /* 2. 챌린지 스티커 붙이기 */
-export async function addStickerToChallenge(goalId: number, sticker: string): Promise<ApiResponse<null>> {
+export async function addStickerToChallenge(goalId: number, sticker: string) {
   try {
     const supabase = createClient();
     const {
@@ -65,12 +62,10 @@ export async function addStickerToChallenge(goalId: number, sticker: string): Pr
     if (insertError) throw new Error(`진행 상태 삽입 실패: ${insertError.message}`);
     if (updateError) throw new Error(`챌린지 업데이트 실패: ${updateError.message}`);
 
-    revalidatePath(`/goals/${goalId}`);
-
-    return { status: 'success', data: null };
+    return { success: true };
   } catch (e) {
     console.error('스티커 등록 실패:', e);
-    return { status: 'error', data: null };
+    return { success: false };
   }
 }
 
@@ -181,7 +176,7 @@ export async function fetchChallengeById(id: number) {
 }
 
 /* 7. 종료된 챌린지 데이터 가져오기 */
-export async function getEndedChallenge(): Promise<ApiResponse<Tables<'challenges'>[]>> {
+export async function getEndedChallenge() {
   try {
     const supabase = createClient();
 
@@ -195,14 +190,14 @@ export async function getEndedChallenge(): Promise<ApiResponse<Tables<'challenge
       .select('*')
       .eq('user_id', user.id)
       .not('end_day', 'is', null);
-    if (error) throw error;
+    if (error) throw new Error(error.message);
 
     return {
-      status: 'success',
+      success: true,
       data,
     };
   } catch (e) {
     console.error('조회 실패:', e);
-    return { status: 'error', data: [] };
+    return { success: false, data: [] };
   }
 }

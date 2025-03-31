@@ -12,7 +12,7 @@ const ChallengeCard = ({ habit, success }: { habit: Tables<'challenges'>; succes
   return (
     <div
       className={cn(
-        'flex items-end gap-2 border border-slate-200 rounded-md shadow-md p-2.5 sm:p-4 cursor-pointer',
+        'flex items-end gap-2 border border-slate-200 rounded-md shadow-md p-2.5 sm:p-3.5 cursor-pointer',
         isFinished ? 'bg-gliter animate-glitter my-3' : success && 'bg-point'
       )}
     >
@@ -37,7 +37,7 @@ const ChallengeCard = ({ habit, success }: { habit: Tables<'challenges'>; succes
           {difference} Day
         </p>
       ) : (
-        <p className='text-2xl sm:text-4xl'>{progressPercentage}%</p>
+        <p className='text-2xl sm:text-3xl'>{progressPercentage}%</p>
       )}
     </div>
   );

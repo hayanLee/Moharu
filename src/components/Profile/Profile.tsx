@@ -1,8 +1,7 @@
 'use client';
-import { getUserInfo } from '@/app/actions/userActions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SETTINGS } from '@/constant/pathname';
-import { useQuery } from '@tanstack/react-query';
+import useProfile from '@/hooks/querys/useProfile';
 import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
@@ -10,11 +9,7 @@ import { Skeleton } from '../ui/skeleton';
 import ProfileSkeleton from './ProfileSkeleton';
 
 const Profile = () => {
-  const { data, isPending } = useQuery({
-    queryKey: ['profile'],
-    queryFn: async () => await getUserInfo(),
-  });
-
+  const { data, isPending } = useProfile();
   if (!data || isPending) return <ProfileSkeleton />;
   const {
     data: { nickname, profile_url, description },

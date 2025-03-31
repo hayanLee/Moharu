@@ -1,5 +1,6 @@
 import { createChallenge } from '@/app/actions/challengeActions';
 import { HOME } from '@/constant/pathname';
+import { queryKeys } from '@/services/queryKeys';
 import { NewChallenge } from '@/types/challenge.type';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -10,11 +11,11 @@ const useAddChallenge = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (newChallengeDate: NewChallenge) => await createChallenge(newChallengeDate),
+    mutationFn: (newChallenge: NewChallenge) => createChallenge(newChallenge),
     onSuccess: (data) => {
       if (data.success) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.challeges });
         router.replace(HOME);
-        queryClient.invalidateQueries({ queryKey: ['all', 'challenges'] });
         return toast({
           title: '등록 완료',
           description: '새로운 챌린지가 등록되었습니다!',
