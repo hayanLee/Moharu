@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { LOGIN, SIGNUP } from '@/constant/pathname';
-import useOAuthLogIn from '@/hooks/mutations/useOAuthLogin';
+import useOAuthLogIn from '@/hooks/mutations/useOAuthLogIn';
 import Link from 'next/link';
 
 const IntroPage = () => {

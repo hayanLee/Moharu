@@ -3,9 +3,8 @@ import { getUserInfo } from '@/app/actions/userActions';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import useLogOut from '@/hooks/mutations/useLogout';
+import useLogOut from '@/hooks/mutations/useLogOut';
 import useUpdateProfile from '@/hooks/mutations/useUpdateProfile';
-import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -18,8 +17,6 @@ const formSchema = z.object({
 const SettingsPage = () => {
   const { mutate } = useUpdateProfile();
   const { mutate: logoutMuate } = useLogOut();
-
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'onBlur',

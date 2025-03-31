@@ -57,8 +57,8 @@ const ProfileEditDialog = ({ userInfo }: ProfileEditDialogProps) => {
     for (const key in form.formState.dirtyFields) {
       formData.append(key, values[key]);
     }
-    const { status } = await updateUserProfile(formData);
-    if (status === 'success') {
+    const { success } = await updateUserProfile(formData);
+    if (success) {
       toast({
         title: '프로필 변경 성공',
         description: '프로필이 정상적으로 변경되었습니다.',
