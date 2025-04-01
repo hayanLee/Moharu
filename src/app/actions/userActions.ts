@@ -20,11 +20,14 @@ export async function signUp({ email, password, nickname }: { email: string; pas
         },
       },
     });
-    if (error) throw error;
+    if (error) {
+      if (error.message.includes('User already registered'))
+        return { success: false, error: '이미 존재하는 이메일입니다.' };
+      else return { success: false, error: '회원가입에 실패하였습니다.' };
+    }
     return { success: true, data };
   } catch (e) {
-    console.error('등록 실패:', e);
-    return { success: false, error: e instanceof Error ? e.message : 'Unknown error occurred' };
+    return { success: false, error: '회원가입 중 오류가 발생하였습니다.' };
   }
 }
 
@@ -36,11 +39,14 @@ export async function logIn({ email, password }: { email: string; password: stri
       email,
       password,
     });
-    if (error) throw error;
+    if (error) {
+      if (error.message.includes('Invalid login credentials'))
+        return { success: false, error: '이메일 또는 비밀번호가 일치하지 않습니다.' };
+      else return { success: false, error: '로그인이 실패하였습니다.' };
+    }
     return { success: true, data };
   } catch (e) {
-    console.error('등록 실패:', e);
-    return { success: false, error: e instanceof Error ? e.message : 'Unknown error occurred' };
+    return { success: false, error: '로그인 중 오류가 발생하였습니다.' };
   }
 }
 

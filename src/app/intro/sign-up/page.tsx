@@ -32,18 +32,29 @@ const AuthPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const result = await signUp({ ...values, nickname: values.nickname || undefined });
-    if (result.data?.session) {
+    try {
+      const result = await signUp({ ...values, nickname: values.nickname || undefined });
+      if (result.success) {
+        toast({
+          title: '회원가입 성공',
+          description: '회원가입이 정상적으로 완료되었습니다.',
+          duration: 2000,
+        });
+        router.replace(HOME);
+      } else {
+        toast({
+          title: '회원가입 실패',
+          description: result.error,
+          variant: 'destructive',
+          duration: 2000,
+        });
+      }
+    } catch (error) {
       toast({
-        title: '회원가입 성공',
-        description: '회원가입이 정상적으로 되었습니다.',
-      });
-      router.replace(HOME);
-    } else {
-      return toast({
-        title: '회원가입 실패',
-        description: '동일한 이메일이 존재하거나, 회원가입이 실패하였습니다.',
-        variant: 'warn',
+        title: '회원가입 오류',
+        description: '회원가입 실패',
+        variant: 'destructive',
+        duration: 2000,
       });
     }
   };
