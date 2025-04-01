@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import useUpdateChallenge from '@/hooks/mutations/useUpdateChallenge';
 import { cn } from '@/lib/utils';
-import { CircleArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -50,7 +50,7 @@ const EditPage = () => {
   return (
     <>
       <Button variant={'ghost'} size={'icon'} asChild>
-        <CircleArrowLeft onClick={goBack} />
+        <ArrowLeft onClick={goBack} />
       </Button>
 
       <Form {...form}>

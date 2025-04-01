@@ -82,9 +82,7 @@ const CreateGoalPage = () => {
           )}
         />
 
-        <h3 className='text-lg font-semibold sm:text-                                                                              a                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    xl my-3'>
-          카테고리
-        </h3>
+        <h3 className='text-lg font-semibold sm:text-xl my-3'>카테고리</h3>
         <FormField
           control={form.control}
           name='category'

@@ -23,9 +23,10 @@ interface StickerDrawerProps {
 
 const StickerDrawer = ({ goalId, disabled }: StickerDrawerProps) => {
   const [selectedSticker, setSelectedSticker] = useState<string>('');
-  const { data, isPending } = useStickersQuery();
+  const { data } = useStickersQuery();
   const { mutate } = useAddSticker();
-  if (!data || isPending) return <>로딩중</>;
+
+  if (!data) return;
   const { data: stickers } = data;
 
   const handleClick = (signedUrl: string) => setSelectedSticker(signedUrl);

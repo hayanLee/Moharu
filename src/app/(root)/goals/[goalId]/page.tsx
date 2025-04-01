@@ -5,6 +5,7 @@ import useDetailChallenge from '@/hooks/querys/useDetailChallenge';
 import dayjs from 'dayjs';
 import { PencilLine } from 'lucide-react';
 import Link from 'next/link';
+import ChallengeDetailSkeleton from './_components/ChallengeDetailSkeleton';
 import StickerDrawer from './_components/StickerDrawer';
 import StickerGrid from './_components/StickerGrid';
 
@@ -14,8 +15,8 @@ type GoalDetailProps = {
 
 const GoalDetailPage = ({ params: { goalId } }: GoalDetailProps) => {
   const { data, isPending } = useDetailChallenge(goalId);
+  if (!data || isPending) return <ChallengeDetailSkeleton />;
 
-  if (!data || isPending) return <>로딩중</>;
   const {
     data: {
       challenge: { challenge_name, start_day, end_day, period, is_completed, last_updated },
