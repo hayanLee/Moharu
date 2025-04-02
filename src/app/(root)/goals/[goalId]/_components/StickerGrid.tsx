@@ -10,9 +10,6 @@ interface StickerGridProps {
 }
 
 const formatDate = (dateString: string) => dayjs(dateString).format('YY/MM/DD');
-{
-  /* <p className='text-sm text-center'>{formatDate(sticker.created_at)}</p> */
-}
 const StickerGrid = ({ period, progress }: StickerGridProps) => {
   return (
     <div className='grid grid-cols-5 gap-2 sm:gap-5'>
@@ -38,8 +35,8 @@ const StickerGrid = ({ period, progress }: StickerGridProps) => {
                   loader={supabaseLoader}
                 />
                 <span
-                  className='absolute text-white font-semibold text-sm opacity-0 group-hover:opacity-100 
-  transition-opacity duration-300 bg-black/50 px-2 py-1 rounded-md'
+                  className='absolute text-white font-semibold text-xs sm:text-sm opacity-0 group-hover:opacity-100 
+  transition-opacity duration-300 bg-black/50 sm:px-2 sm:py-1 p-0.5 rounded-md'
                 >
                   {formattedDate}
                 </span>

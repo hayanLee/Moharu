@@ -1,8 +1,8 @@
 export const PERIODS = [
-  { period: 3, icon: '🕒' },
-  { period: 7, icon: '📆' },
-  { period: 14, icon: '📅' },
-  { period: 30, icon: '🗓️' },
+  { period: 3, icon: '📅' },
+  { period: 7, icon: '⏳' },
+  { period: 14, icon: '🔄' },
+  { period: 30, icon: '🏆' },
 ];
 
 export const CATEGORY = [

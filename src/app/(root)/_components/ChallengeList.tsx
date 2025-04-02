@@ -1,5 +1,6 @@
 'use client';
 import ChallengeCard from '@/components/Card/ChallengeCard';
+import { Skeleton } from '@/components/ui/skeleton';
 import { GOAL_DETAIL } from '@/constant/pathname';
 import useChallenges from '@/hooks/querys/useChallenges';
 import Link from 'next/link';
@@ -7,17 +8,38 @@ import ChallengeListSkeleton from './ChallengeListSkeleton';
 
 const ChallengeList = () => {
   const { data, isPending } = useChallenges();
-  if (!data || isPending) return <ChallengeListSkeleton />;
+  if (!data || isPending)
+    return (
+      <>
+        <h3 className='title flex items-center gap-2 text-lg font-semibold'>
+          Today
+          <span className='relative flex items-center w-24 h-6 rounded-full overflow-hidden'>
+            <Skeleton className='absolute left-0 top-0 h-full w-full animate-pulse' />
+          </span>
+        </h3>
+        <ChallengeListSkeleton />
+      </>
+    );
 
   const {
-    data: { todayUntillDone, todayDone },
+    data: { todayUntillDone, todayDone, total },
   } = data;
 
   return (
     <>
-      <h3 className='title'>
-        Today <span className='text-point brightness-95'>({todayUntillDone?.length})</span>
+      <h3 className='title flex items-center gap-2 text-lg font-semibold'>
+        Today
+        <span className='relative flex items-center w-24 h-6 bg-gray-200 dark:bg-gray-500 rounded-full overflow-hidden'>
+          <div
+            className='absolute left-0 top-0 h-full bg-point transition-all duration-300'
+            style={{ width: `${((total - todayUntillDone?.length) / total) * 100}%` }}
+          />
+          <span className='relative flex items-center px-2 text-sm font-semibold text-black'>
+            {total - todayUntillDone?.length} / {total}
+          </span>
+        </span>
       </h3>
+
       <div className='overflow-y-auto scrollbar-hide'>
         {!todayUntillDone?.length && (
           <div className='text-center sm:text-lg text-gray-400'>새로운 챌린지를 시작해보세요 !</div>

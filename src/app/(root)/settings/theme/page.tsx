@@ -10,37 +10,35 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const COLORCHIPS = [
-  '#e9ff27',
-  '#FF4552',
-  '#005397',
-  '#FDF06F',
-  '#77EEDF',
-  '#9C9CDD',
-  '#F1D3D3',
-  '#FFFDE7',
-  '#CE7182',
-  '#FF6090',
-  '#A6CFE2',
+  '#e3e7a5',
+  '#e2a1a7',
+  '#c7dbee',
+  '#efe7b3',
+  '#b3dad5',
+  '#c2c2df',
+  '#e6d2d2',
+  '#f0ebd5',
+  '#e6c5a8',
+  '#edbdc8',
+  '#bdd3e0',
 ] as const;
 export type ColorChip = (typeof COLORCHIPS)[number];
 
 const SettingStyle = () => {
-  const { setTheme, themes, systemTheme } = useTheme();
+  const { theme, setTheme, themes } = useTheme();
   const { mutate } = useSetColor();
-  const { data } = useProfile();
-  const [selectedColor, setSelectedColor] = useState<ColorChip>(data?.data.color || '#e9ff27');
-  const [selectedTheme, setSelectedTheme] = useState<'dark' | 'light' | 'system'>(systemTheme || 'light');
+  const { data: userInfo } = useProfile();
+  const [selectedColor, setSelectedColor] = useState<ColorChip>(userInfo?.data.color || '#e9ff27');
+  const [selectedTheme, setSelectedTheme] = useState<'dark' | 'light' | 'system'>(theme as 'dark' | 'light' | 'system');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const handleSelectColor = () => mutate(selectedColor);
-
   const handleApplyChanges = () => {
     if (selectedTheme) setTheme(selectedTheme);
-    handleSelectColor();
+    if (selectedColor !== userInfo?.data.color) mutate(selectedColor);
   };
 
   return (
@@ -63,8 +61,6 @@ const SettingStyle = () => {
         </div>
       </div>
 
-      <div className='border my-3' />
-
       <h3 className='subTitle'>메인 컬러 설정</h3>
       <div className='grid grid-cols-5 gap-4 px-4 grow auto-rows-min justify-items-center'>
         {COLORCHIPS.map((color) => (
@@ -72,7 +68,7 @@ const SettingStyle = () => {
             key={color}
             className={cn(
               'w-16 h-16 rounded-full border-2 hover:scale-110 transition-transform',
-              selectedColor === color ? 'border-black' : 'border-transparent'
+              selectedColor === color ? 'border-black dark:border-white' : 'border-transparent'
             )}
             style={{ backgroundColor: color }}
             onClick={() => setSelectedColor(color)}

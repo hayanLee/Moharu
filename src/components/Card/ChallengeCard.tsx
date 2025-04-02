@@ -18,14 +18,24 @@ const ChallengeCard = ({ habit, success }: { habit: Tables<'challenges'>; succes
     >
       <div className='grow flex flex-col gap-4 min-w-0'>
         <div>
-          <h4 className='sm:text-lg font-semibold text-ellipsis text-nowrap overflow-hidden'>{habit.challenge_name}</h4>
+          <h4
+            className={cn(
+              'sm:text-lg font-semibold text-ellipsis text-nowrap overflow-hidden text-black',
+              !success && 'dark:text-white'
+            )}
+          >
+            {habit.challenge_name}
+          </h4>
           <p className='rounded text-gray-500 text-xs sm:text-sm flex items-center'>
             {habit.start_day} ~ {isFinished && habit.end_day}
           </p>
         </div>
 
         <span
-          className={cn('text-xs sm:text-sm w-fit rounded py-1 px-2', CATEGORY_BG[habit.category] || 'text-gray-700')}
+          className={cn(
+            'text-xs sm:text-sm w-fit rounded py-1 px-2 dark:text-black',
+            CATEGORY_BG[habit.category] || 'text-gray-700'
+          )}
         >
           #{habit.category}
         </span>
@@ -37,7 +47,9 @@ const ChallengeCard = ({ habit, success }: { habit: Tables<'challenges'>; succes
           {difference} Day
         </p>
       ) : (
-        <p className='text-2xl sm:text-3xl'>{progressPercentage}%</p>
+        <p className={cn('text-2xl font-semibold sm:text-3xl dark:text-black', !success && 'dark:text-white')}>
+          {progressPercentage}%
+        </p>
       )}
     </div>
   );

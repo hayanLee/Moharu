@@ -5,7 +5,7 @@ const now = dayjs();
 
 const Header = () => {
   return (
-    <header className='text-black font-bold p-4 flex justify-between items-center'>
+    <header className='text-black dark:text-white font-bold p-4 flex justify-between items-center'>
       <Link href={HOME} className='font-semibold text-xl sm:text-2xl '>
         모하루
       </Link>

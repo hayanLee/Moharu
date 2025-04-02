@@ -35,7 +35,7 @@ const StickerDrawer = ({ goalId, disabled }: StickerDrawerProps) => {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button size={'lg'} className='mx-auto' disabled={disabled || isPending}>
+        <Button size={'lg'} className='mx-auto' disabled={disabled || isPending} variant={'point'}>
           {disabled ? '오늘 성공했어요! 👍' : isPending ? '전송중...' : '오늘 날짜에 스티커 붙이기'}
         </Button>
       </DrawerTrigger>

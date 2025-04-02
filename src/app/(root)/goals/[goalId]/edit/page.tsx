@@ -17,7 +17,7 @@ interface EditPageProps {
 
 const EditPage = ({ params: { goalId } }: EditPageProps) => {
   const { mutate } = useUpdateChallenge();
-  const { data, isPending } = useDetailChallenge(goalId);
+  const { data } = useDetailChallenge(goalId);
   const form = useForm({
     mode: 'onBlur',
     defaultValues: {
@@ -39,7 +39,7 @@ const EditPage = ({ params: { goalId } }: EditPageProps) => {
       <Form {...form}>
         <form className='flex flex-col h-full' onSubmit={form.handleSubmit(onSubmit)}>
           <div className='flex flex-col gap-2 grow'>
-            <h3 className='text-lg font-semibold sm:text-xl my-3'>챌린지명</h3>
+            <h3 className='subTitle'>챌린지명</h3>
             <FormField
               control={form.control}
               name='challenge_name'
@@ -57,7 +57,7 @@ const EditPage = ({ params: { goalId } }: EditPageProps) => {
               )}
             />
 
-            <h3 className='text-lg font-semibold sm:text-xl my-3'>기간</h3>
+            <h3 className='subTitle'>기간</h3>
             <FormField
               control={form.control}
               name='period'
@@ -68,13 +68,18 @@ const EditPage = ({ params: { goalId } }: EditPageProps) => {
                       <Button
                         type='button'
                         key={value.period}
-                        className={cn('sm:p-3 p-1 border justify-start', value.period === field.value && 'bg-point')}
+                        className={cn(
+                          'sm:p-3 p-1 border justify-start',
+                          value.period === field.value && 'bg-point dark:text-black'
+                        )}
                         size={'full'}
                         variant={'outline'}
                         value={value.period}
                         disabled
                       >
-                        <span className='border rounded-full p-2 bg-gray-200 w-10 h-10 text-center'>{value.icon}</span>
+                        <span className='border rounded-full bg-gray-200 w-10 h-10 flex items-center justify-center text-base'>
+                          {value.icon}
+                        </span>
                         <p className='text-base sm:text-lg'>
                           <span className='font-semibold'>D-{value.period} </span>
                         </p>
@@ -85,7 +90,7 @@ const EditPage = ({ params: { goalId } }: EditPageProps) => {
               )}
             />
 
-            <h3 className='text-lg font-semibold sm:text-xl my-3'>카테고리</h3>
+            <h3 className='subTitle'>카테고리</h3>
             <FormField
               control={form.control}
               name='category'
@@ -94,7 +99,10 @@ const EditPage = ({ params: { goalId } }: EditPageProps) => {
                   {CATEGORY.map((category) => (
                     <div className='flex items-center space-x-2' key={category.title}>
                       <RadioGroupItem value={category.title} id={category.title} />
-                      <FormLabel htmlFor={category.title} className={`bg-${category.color}-300 px-2 py-1 rounded`}>
+                      <FormLabel
+                        htmlFor={category.title}
+                        className={`bg-${category.color}-300 px-2 py-1 rounded font-semibold text-black`}
+                      >
                         {category.title}
                       </FormLabel>
                     </div>
@@ -108,7 +116,9 @@ const EditPage = ({ params: { goalId } }: EditPageProps) => {
             <Button variant={'outline'} asChild>
               <Link href={HOME}>취소</Link>
             </Button>
-            <Button type='submit'>수정</Button>
+            <Button type='submit' disabled={!Object.keys(form.formState.dirtyFields).length}>
+              수정
+            </Button>
           </div>
         </form>
       </Form>

@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 
 const Footer = () => {
   return (
-    <div className='w-full bg-white border-t'>
+    <div className='w-full bg-background border-t'>
       <div className='flex justify-around items-center'>
         <Button variant={'ghost'} asChild size={'full'}>
           <Link href={GOALS_NEW} className='rounded-none p-4'>

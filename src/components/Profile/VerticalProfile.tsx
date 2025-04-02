@@ -6,7 +6,7 @@ import ProfileSkeleton from './ProfileSkeleton';
 
 const VerticalProfile = () => {
   const { data, isPending } = useProfile();
-  if (!data || isPending) return <ProfileSkeleton />;
+  if (!data || isPending) return <ProfileSkeleton vertical />;
   const {
     data: { nickname, profile_url, description },
   } = data;

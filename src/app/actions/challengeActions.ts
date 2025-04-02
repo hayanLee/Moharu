@@ -126,11 +126,11 @@ export async function fetchChallenges() {
 
     return {
       success: true,
-      data: { todayUntillDone, todayDone },
+      data: { todayUntillDone, todayDone, total: data.length },
     };
   } catch (e) {
     console.error('조회 실패:', e);
-    return { success: false, data: { todayUntillDone: [], todayDone: [] } };
+    return { success: false, data: { todayUntillDone: [], todayDone: [], total: 0 } };
   }
 }
 
