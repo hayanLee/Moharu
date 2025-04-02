@@ -1,21 +1,27 @@
-import { UserInfo } from '@/app/actions/types/response';
+'use client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import useProfile from '@/hooks/querys/useProfile';
+import { Skeleton } from '../ui/skeleton';
+import ProfileSkeleton from './ProfileSkeleton';
 
-type VerticalProfileProps = {
-  userInfo: UserInfo;
-};
+const VerticalProfile = () => {
+  const { data, isPending } = useProfile();
+  if (!data || isPending) return <ProfileSkeleton />;
+  const {
+    data: { nickname, profile_url, description },
+  } = data;
 
-const VerticalProfile = ({ userInfo }: VerticalProfileProps) => {
-  const { nickname, profile_url, description } = userInfo;
   return (
     <div className='flex flex-col items-center'>
       <Avatar className='w-16 h-16'>
         <AvatarImage src={profile_url} />
-        <AvatarFallback>CN</AvatarFallback>
+        <AvatarFallback>
+          <Skeleton className='w-full h-full' />
+        </AvatarFallback>
       </Avatar>
-      <div className='flex flex-col items-center'>
-        <p className='text-lg'>{nickname}</p>
-        <p className='text-gray-500'>{description}</p>
+      <div className='flex flex-col items-center p-2'>
+        <p className='text-base sm:text-lg'>{nickname}</p>
+        <p className='text-sm sm:text-base text-gray-500'>{description || '나를 위한 한마디를 적어보세요'} </p>
       </div>
     </div>
   );

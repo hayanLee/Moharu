@@ -2,6 +2,8 @@ export const INTRO = '/intro';
 export const LOGIN = '/intro/log-in';
 export const SIGNUP = '/intro/sign-up';
 export const SETTINGS = '/settings';
+export const SETTINGS_PROFILE = '/settings/profile';
+export const SETTINGS_THEME = '/settings/theme';
 
 export const HOME = '/';
 export const MYPAGE = '/mypage';
