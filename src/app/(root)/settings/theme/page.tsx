@@ -1,8 +1,11 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { SETTINGS } from '@/constant/pathname';
-import { useToast } from '@/hooks/use-toast';
+import useSetColor from '@/hooks/mutations/useSetColor';
+import useProfile from '@/hooks/querys/useProfile';
 import { cn } from '@/lib/utils';
+import { Moon, RefreshCcw, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -18,34 +21,54 @@ const COLORCHIPS = [
   '#CE7182',
   '#FF6090',
   '#A6CFE2',
-];
+] as const;
+export type ColorChip = (typeof COLORCHIPS)[number];
 
 const SettingStyle = () => {
-  const { toast } = useToast();
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [initialColor, setInitialColor] = useState<string | null>(null); // 초기 색상 저장
+  const { setTheme, themes, systemTheme } = useTheme();
+  const { mutate } = useSetColor();
+  const { data } = useProfile();
+  const [selectedColor, setSelectedColor] = useState<ColorChip>(data?.data.color || '#e9ff27');
+  const [selectedTheme, setSelectedTheme] = useState<'dark' | 'light' | 'system'>(systemTheme || 'light');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const initial = getComputedStyle(document.documentElement).getPropertyValue('--point');
-    setInitialColor(initial.trim() || '#FF4552'); // 기본 색상 설정
+    setMounted(true);
   }, []);
 
-  const handleSelectColor = () => {
-    if (selectedColor) {
-      document.documentElement.style.setProperty('--point', selectedColor);
-    }
-    toast({
-      title: '변경 성공',
-      description: '메인 컬러가 변경되었습니다.',
-      duration: 2000,
-    });
+  const handleSelectColor = () => mutate(selectedColor);
+
+  const handleApplyChanges = () => {
+    if (selectedTheme) setTheme(selectedTheme);
+    handleSelectColor();
   };
 
   return (
-    <div className='flex flex-col h-full'>
-      <div className='grid grid-cols-5 gap-4 p-4 grow auto-rows-min justify-items-center'>
+    <div className='flex flex-col h-full gap-3'>
+      <div>
+        <h3 className='subTitle'>테마 설정</h3>
+        <div className='flex flex-col gap-2'>
+          {themes.map((mode) => (
+            <Button
+              key={mode}
+              onClick={() => setSelectedTheme(mode as 'dark' | 'light' | 'system')}
+              variant={mounted && selectedTheme === mode ? 'default' : 'outline'}
+            >
+              {mode === 'light' && <Sun />}
+              {mode === 'dark' && <Moon />}
+              {mode === 'system' && <RefreshCcw />}
+              {mode.charAt(0).toUpperCase() + mode.slice(1)} Mode
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div className='border my-3' />
+
+      <h3 className='subTitle'>메인 컬러 설정</h3>
+      <div className='grid grid-cols-5 gap-4 px-4 grow auto-rows-min justify-items-center'>
         {COLORCHIPS.map((color) => (
-          <button
+          <Button
             key={color}
             className={cn(
               'w-16 h-16 rounded-full border-2 hover:scale-110 transition-transform',
@@ -61,7 +84,7 @@ const SettingStyle = () => {
         <Button variant={'outline'} asChild>
           <Link href={SETTINGS}>취소</Link>
         </Button>
-        <Button onClick={handleSelectColor}>선택</Button>
+        <Button onClick={handleApplyChanges}>선택</Button>
       </div>
     </div>
   );

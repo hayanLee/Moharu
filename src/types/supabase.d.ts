@@ -90,6 +90,7 @@ export type Database = {
       }
       users: {
         Row: {
+          color: string | null
           created_at: string
           description: string
           email: string | null
@@ -98,6 +99,7 @@ export type Database = {
           profile_url: string | null
         }
         Insert: {
+          color?: string | null
           created_at?: string
           description?: string
           email?: string | null
@@ -106,6 +108,7 @@ export type Database = {
           profile_url?: string | null
         }
         Update: {
+          color?: string | null
           created_at?: string
           description?: string
           email?: string | null

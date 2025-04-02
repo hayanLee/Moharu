@@ -17,6 +17,9 @@ body {
   .title {
     @apply text-xl sm:text-2xl font-semibold;
   }
+  .subTitle {
+    @apply text-lg sm:text-xl font-semibold mb-3;
+  }
   .day {
     @apply bg-gray-300 rounded-full flex justify-center items-center text-white/70 aspect-square border-2 sm:text-xl;
   }

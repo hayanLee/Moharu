@@ -1,5 +1,6 @@
 'use server';
 import { createClient } from '@/supabase/server';
+import { ColorChip } from '../(root)/settings/theme/page';
 
 /*
  * 유저 액션
@@ -130,13 +131,31 @@ export async function getUserInfo() {
 
     const { data, error } = await supabase
       .from('users')
-      .select('nickname, profile_url, description')
+      .select('nickname, profile_url, description, color')
       .eq('id', user.id)
       .single();
     if (error) throw new Error(`유저 정보 조회 실패 : : ${error.message}`);
     return { success: true, data };
   } catch (e) {
     console.error('등록 실패:', e);
-    return { success: false, data: { nickname: '', profile_url: '', description: '' } };
+    return { success: false, data: { nickname: '', profile_url: '', description: '', color: '' } };
+  }
+}
+
+/* 6. 메인 컬러 변경 */
+export async function setMainColor(color: ColorChip) {
+  try {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error('유저 없음');
+
+    const { error } = await supabase.from('users').update({ color: color }).eq('id', user.id);
+    if (error) throw new Error(`컬러 변경 실패 : : ${error.message}`);
+    return { success: true };
+  } catch (e) {
+    console.error('변경 실패:', e);
+    return { success: false };
   }
 }
