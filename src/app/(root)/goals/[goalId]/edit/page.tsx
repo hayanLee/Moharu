@@ -1,46 +1,36 @@
 'use client';
-import { fetchChallengeById } from '@/app/actions/challengeActions';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import useUpdateChallenge from '@/hooks/mutations/useUpdateChallenge';
+import useDetailChallenge from '@/hooks/querys/useDetailChallenge';
 import { cn } from '@/lib/utils';
 import { ArrowLeft } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { FieldValues, useForm } from 'react-hook-form';
 import { CATEGORY, PERIODS } from '../_constants/constant';
 
-const EditPage = () => {
-  const { goalId } = useParams();
+interface EditPageProps {
+  params: { goalId: string };
+}
+
+const EditPage = ({ params: { goalId } }: EditPageProps) => {
   const router = useRouter();
   const { mutate } = useUpdateChallenge();
-
+  const { data, isPending } = useDetailChallenge(goalId);
   const form = useForm({
     mode: 'onBlur',
     defaultValues: {
       period: 3,
       category: 'Health',
-      challengeName: '',
+      challenge_name: '',
     },
+    values: data?.data.challenge,
   });
 
-  useEffect(() => {
-    const getChallenge = async () => {
-      const {
-        data: { challenge },
-      } = await fetchChallengeById(Number(goalId));
-
-      form.setValue('period', challenge?.period as number);
-      form.setValue('category', challenge?.category || 'Work');
-      form.setValue('challengeName', challenge?.challenge_name || '');
-    };
-    getChallenge();
-  }, []);
-
   const onSubmit = async (values: FieldValues) => {
-    const { category, challengeName: challenge_name } = values;
+    const { category, challenge_name } = values;
     const updateChallegeInfo = { id: Number(goalId), category, challenge_name };
     mutate(updateChallegeInfo);
   };
@@ -58,7 +48,7 @@ const EditPage = () => {
           <h3 className='text-lg font-semibold sm:text-xl my-3'>챌린지명</h3>
           <FormField
             control={form.control}
-            name='challengeName'
+            name='challenge_name'
             rules={{
               required: '챌린지명은 필수입니다.',
               maxLength: { value: 20, message: '최대 20자 이내로 작성해주세요' },

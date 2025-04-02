@@ -30,7 +30,6 @@ const CreateGoalPage = () => {
       start_day: now.format('YYYY-MM-DD'),
       period: Number(form.getValues('period')),
     };
-
     mutate(newChallenge);
   };
 
@@ -59,6 +58,9 @@ const CreateGoalPage = () => {
         <FormField
           control={form.control}
           name='period'
+          rules={{
+            required: '기간 설정은 필수입니다.',
+          }}
           render={({ field }) => (
             <div className='grid grid-cols-2 gap-2'>
               {PERIODS.map((value) => (

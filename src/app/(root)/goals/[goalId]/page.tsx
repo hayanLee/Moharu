@@ -9,9 +9,9 @@ import ChallengeDetailSkeleton from './_components/ChallengeDetailSkeleton';
 import StickerDrawer from './_components/StickerDrawer';
 import StickerGrid from './_components/StickerGrid';
 
-type GoalDetailProps = {
+interface GoalDetailProps {
   params: { goalId: string };
-};
+}
 
 const GoalDetailPage = ({ params: { goalId } }: GoalDetailProps) => {
   const { data, isPending } = useDetailChallenge(goalId);

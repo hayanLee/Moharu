@@ -24,7 +24,7 @@ interface StickerDrawerProps {
 const StickerDrawer = ({ goalId, disabled }: StickerDrawerProps) => {
   const [selectedSticker, setSelectedSticker] = useState<string>('');
   const { data } = useStickersQuery();
-  const { mutate } = useAddSticker();
+  const { mutate, isPending } = useAddSticker();
 
   if (!data) return;
   const { data: stickers } = data;
@@ -34,9 +34,9 @@ const StickerDrawer = ({ goalId, disabled }: StickerDrawerProps) => {
 
   return (
     <Drawer>
-      <DrawerTrigger disabled={disabled} asChild>
-        <Button size={'lg'} className='mx-auto' disabled={disabled}>
-          {disabled ? '오늘은 스티커를 붙였어요!' : '오늘 날짜에 스티커 붙이기'}
+      <DrawerTrigger asChild>
+        <Button size={'lg'} className='mx-auto' disabled={disabled || isPending}>
+          {disabled ? '오늘 성공했어요! 👍' : isPending ? '전송중...' : '오늘 날짜에 스티커 붙이기'}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
@@ -71,8 +71,8 @@ const StickerDrawer = ({ goalId, disabled }: StickerDrawerProps) => {
 
           <DrawerFooter>
             <DrawerClose>
-              <Button type='submit' size={'lg'} disabled={!selectedSticker} onClick={handleSubmit}>
-                제출
+              <Button type='submit' size={'lg'} disabled={!selectedSticker || isPending} onClick={handleSubmit}>
+                {isPending ? '제출 중...' : '제출'}
               </Button>
             </DrawerClose>
           </DrawerFooter>
