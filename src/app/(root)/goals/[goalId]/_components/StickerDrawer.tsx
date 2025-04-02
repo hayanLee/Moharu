@@ -1,20 +1,20 @@
 'use client';
+import { getStickersAction } from '@/app/actions/getStickersAction';
 import { Button } from '@/components/ui/button';
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import useAddSticker from '@/hooks/mutations/useAddSticker';
-import useStickersQuery from '@/hooks/querys/useStickersQuery';
 import { cn } from '@/lib/utils';
-import supabaseLoader from '@/supabase/supabaseLoader';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface StickerDrawerProps {
   goalId: string;
@@ -23,11 +23,16 @@ interface StickerDrawerProps {
 
 const StickerDrawer = ({ goalId, disabled }: StickerDrawerProps) => {
   const [selectedSticker, setSelectedSticker] = useState<string>('');
-  const { data } = useStickersQuery();
+  const [stickers, setStickers] = useState<string[]>([]);
   const { mutate, isPending } = useAddSticker();
 
-  if (!data) return;
-  const { data: stickers } = data;
+  useEffect(() => {
+    const getStickers = async () => {
+      const result = await getStickersAction();
+      setStickers(result);
+    };
+    getStickers();
+  }, []);
 
   const handleClick = (signedUrl: string) => setSelectedSticker(signedUrl);
   const handleSubmit = () => mutate({ goalId, selectedSticker });
@@ -43,26 +48,26 @@ const StickerDrawer = ({ goalId, disabled }: StickerDrawerProps) => {
         <div className='max-h-[80vh]'>
           <DrawerHeader className='justify-center py-8'>
             <DrawerTitle className='font-medium'>✨ 오늘의 스티커를 선택해 주세요 ✨</DrawerTitle>
+            <DrawerDescription>아래에서 원하는 스티커를 클릭하세요.</DrawerDescription>
           </DrawerHeader>
 
-          <div className='rounded-md max-w-md mx-auto max-h-[50vh] px-2 overflow-y-auto scrollbar-hide'>
+          <div className='rounded-md max-w-md mx-auto max-h-[50vh] px-4 overflow-y-auto scrollbar-hide'>
             <div className='grid grid-cols-3 sm:grid-cols-4 gap-4'>
-              {stickers?.map((sticker) => (
+              {stickers?.map((stickerUrl) => (
                 <div
-                  key={sticker}
+                  key={stickerUrl}
                   className={cn(
                     'bg-white rounded-full relative aspect-square flex justify-center items-center border overflow-hidden',
-                    selectedSticker === sticker && 'border-point border-2'
+                    selectedSticker === stickerUrl && 'border-point border-2 dark:border-blue-400 dark:border-4'
                   )}
-                  onClick={() => handleClick(sticker)}
+                  onClick={() => handleClick(stickerUrl)}
                 >
                   <Image
-                    src={`stickers/${sticker}`}
+                    src={stickerUrl}
                     alt='Picture of sticker'
                     fill
                     className='cursor-pointer object-cover'
-                    sizes='(max-width: 640px) 25vw, (max-width: 1024px) 33vw, 25vw'
-                    loader={supabaseLoader}
+                    unoptimized
                   />
                 </div>
               ))}

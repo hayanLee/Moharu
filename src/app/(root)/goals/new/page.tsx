@@ -35,7 +35,7 @@ const CreateGoalPage = () => {
   return (
     <Form {...form}>
       <form className='flex flex-col h-full' onSubmit={form.handleSubmit(onSubmit)}>
-        <div className='grow flex flex-col gap-2 '>
+        <div className='grow flex flex-col gap-2 px-2'>
           <h3 className='subTitle'>챌린지명</h3>
           <FormField
             control={form.control}

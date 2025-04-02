@@ -25,7 +25,7 @@ const EditPage = ({ params: { goalId } }: EditPageProps) => {
       category: 'Health',
       challenge_name: '',
     },
-    values: data?.data.challenge,
+    values: data?.data,
   });
 
   const onSubmit = async (values: FieldValues) => {
@@ -38,7 +38,7 @@ const EditPage = ({ params: { goalId } }: EditPageProps) => {
     <>
       <Form {...form}>
         <form className='flex flex-col h-full' onSubmit={form.handleSubmit(onSubmit)}>
-          <div className='flex flex-col gap-2 grow'>
+          <div className='flex flex-col gap-2 grow px-2'>
             <h3 className='subTitle'>챌린지명</h3>
             <FormField
               control={form.control}

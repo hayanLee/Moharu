@@ -21,6 +21,7 @@ const ChallengeCard = ({ habit, success }: { habit: Tables<'challenges'>; succes
           <h4
             className={cn(
               'sm:text-lg font-semibold text-ellipsis text-nowrap overflow-hidden text-black',
+              isFinished && '!text-black font-bold',
               !success && 'dark:text-white'
             )}
           >

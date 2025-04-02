@@ -16,12 +16,8 @@ interface GoalDetailProps {
 const GoalDetailPage = ({ params: { goalId } }: GoalDetailProps) => {
   const { data, isPending } = useDetailChallenge(goalId);
   if (!data || isPending) return <ChallengeDetailSkeleton />;
-
   const {
-    data: {
-      challenge: { challenge_name, start_day, end_day, period, is_completed, last_updated },
-      progress,
-    },
+    data: { challenge_name, start_day, end_day, period, is_completed, last_updated, progress },
   } = data;
   const today = dayjs().format('YYYY-MM-DD');
   const todaySticker = !is_completed && last_updated !== today;

@@ -158,19 +158,13 @@ export async function fetchChallengeById(id: number) {
     if (error) throw error;
     return {
       success: true,
-      data: {
-        challenge: data,
-        progress: data?.progress ?? [],
-      },
+      data,
     };
   } catch (e) {
     console.error('조회 실패:', e);
     return {
       success: false,
-      data: {
-        challenge: null,
-        progress: [],
-      },
+      data: null,
     };
   }
 }

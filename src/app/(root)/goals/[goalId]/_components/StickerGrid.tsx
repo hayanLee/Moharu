@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import supabaseLoader from '@/supabase/supabaseLoader';
 import { Tables } from '@/types/supabase';
 import dayjs from 'dayjs';
 import Image from 'next/image';
@@ -28,11 +27,12 @@ const StickerGrid = ({ period, progress }: StickerGridProps) => {
             {sticker && (
               <>
                 <Image
-                  src={`stickers/${sticker.sticker_img}`}
+                  src={sticker.sticker_img as string}
                   alt='Picture of Sticker'
                   fill
                   className='object-cover'
-                  loader={supabaseLoader}
+                  priority
+                  unoptimized
                 />
                 <span
                   className='absolute text-white font-semibold text-xs sm:text-sm opacity-0 group-hover:opacity-100 
