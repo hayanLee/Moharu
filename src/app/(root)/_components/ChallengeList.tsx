@@ -1,5 +1,6 @@
 'use client';
 import ChallengeCard from '@/components/Card/ChallengeCard';
+import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { GOAL_DETAIL } from '@/constant/pathname';
 import useChallenges from '@/hooks/querys/useChallenges';
@@ -29,15 +30,12 @@ const ChallengeList = () => {
     <>
       <h3 className='title flex items-center gap-2 text-lg font-semibold'>
         Today
-        <span className='relative flex items-center w-24 h-6 bg-gray-200 dark:bg-gray-500 rounded-full overflow-hidden'>
-          <div
-            className='absolute left-0 top-0 h-full bg-point transition-all duration-300'
-            style={{ width: `${((total - todayUntillDone?.length) / total) * 100}%` }}
-          />
-          <span className='relative flex items-center px-2 text-sm font-semibold text-black'>
+        <div className='relative'>
+          <Progress value={((total - todayUntillDone?.length) / total) * 100} className='w-24 h-4' />
+          <span className='absolute inset-0 flex items-center justify-center text-sm font-semibold text-black'>
             {total - todayUntillDone?.length} / {total}
           </span>
-        </span>
+        </div>
       </h3>
 
       <div className='overflow-y-auto scrollbar-hide'>
