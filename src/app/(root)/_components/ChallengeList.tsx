@@ -14,7 +14,7 @@ const ChallengeList = () => {
       <>
         <h3 className='title flex items-center gap-2 text-lg font-semibold'>
           Today
-          <span className='relative flex items-center w-24 h-6 rounded-full overflow-hidden'>
+          <span className='relative flex items-center w-24 h-[16px] rounded-full overflow-hidden'>
             <Skeleton className='absolute left-0 top-0 h-full w-full animate-pulse' />
           </span>
         </h3>

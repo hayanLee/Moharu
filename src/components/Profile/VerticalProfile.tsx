@@ -1,7 +1,6 @@
 'use client';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useProfile from '@/hooks/querys/useProfile';
-import { Skeleton } from '../ui/skeleton';
+import Image from 'next/image';
 import ProfileSkeleton from './ProfileSkeleton';
 
 const VerticalProfile = () => {
@@ -13,12 +12,15 @@ const VerticalProfile = () => {
 
   return (
     <div className='flex flex-col items-center'>
-      <Avatar className='w-16 h-16'>
-        <AvatarImage src={profile_url} />
-        <AvatarFallback>
-          <Skeleton className='w-full h-full' />
-        </AvatarFallback>
-      </Avatar>
+      <div className='w-16 h-16 relative'>
+        <Image
+          src={`https://${process.env.NEXT_PUBLIC_PROJECT_ID}.supabase.co/storage/v1/object/public/${profile_url}`}
+          alt='유저 프로필 이미지'
+          fill
+          priority
+          className='aspect-square object-cover rounded-full'
+        />
+      </div>
       <div className='flex flex-col items-center p-2'>
         <p className='text-base sm:text-lg'>{nickname}</p>
         <p className='text-sm sm:text-base text-gray-500'>{description || '나를 위한 한마디를 적어보세요'} </p>

@@ -6,8 +6,8 @@ const ChallengeDetailSkeleton = () => {
       {/* header */}
       <div className='flex justify-between items-center overflow-hidden'>
         <div className='min-w-0'>
-          <Skeleton className='w-36 sm:w-48 h-7 rounded-md' />
-          <Skeleton className='w-24 sm:w-32 h-6 mt-1 rounded-md' />
+          <Skeleton className='w-36 sm:w-48 h-6 rounded-md' />
+          <Skeleton className='w-24 sm:w-32 h-5 mt-1 rounded-md' />
         </div>
         <div className='flex space-x-4'>
           <Skeleton className='w-8 h-8 rounded-md' />
@@ -15,13 +15,13 @@ const ChallengeDetailSkeleton = () => {
         </div>
       </div>
       {/* grid */}
-      <div className='grid grid-cols-5 gap-2 auto-rows-min sm:gap-5'>
+      <div className='grid grid-cols-5 gap-2 auto-rows-min sm:gap-5 py-3'>
         {Array.from({ length: 14 }).map((_, idx) => (
           <Skeleton key={idx} className='rounded-full aspect-square border-2 sm:text-xl' />
         ))}
       </div>
       {/* 제출 버튼 */}
-      <Skeleton className='w-1/2 mx-auto h-10 rounded-md mt-2' />
+      <Skeleton className='w-full mx-auto h-9 rounded-md' />
     </div>
   );
 };
