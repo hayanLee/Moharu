@@ -1,18 +1,21 @@
 import { ColorChip } from '@/app/(root)/settings/theme/page';
 import { setMainColor } from '@/app/actions/userActions';
 import { HOME } from '@/constant/pathname';
-import { useMutation } from '@tanstack/react-query';
+import { queryKeys } from '@/services/queryKeys';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../use-toast';
 
 const useSetColor = () => {
   const { toast } = useToast();
   const router = useRouter();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (color: ColorChip) => setMainColor(color),
     onSuccess: (data, variable) => {
       if (data) {
         document.documentElement.style.setProperty('--point', variable);
+        queryClient.invalidateQueries({ queryKey: queryKeys.profile });
         router.push(HOME);
         toast({
           title: '변경 성공',

@@ -26,11 +26,11 @@ export type ColorChip = (typeof COLORCHIPS)[number];
 
 const SettingStyle = () => {
   const { theme, setTheme, themes } = useTheme();
-  const { mutate } = useSetColor();
   const { data: userInfo } = useProfile();
-  const [selectedColor, setSelectedColor] = useState<ColorChip>(userInfo?.data.color || '#e9ff27');
+  const [selectedColor, setSelectedColor] = useState<ColorChip>(userInfo?.data.color || '#e3e7a5');
   const [selectedTheme, setSelectedTheme] = useState<'dark' | 'light' | 'system'>(theme as 'dark' | 'light' | 'system');
   const [mounted, setMounted] = useState(false);
+  const { mutate } = useSetColor();
 
   useEffect(() => {
     setMounted(true);

@@ -117,7 +117,12 @@ export async function fetchChallenges() {
 
     const now = dayjs().format('YYYY-MM-DD');
     // 안 끝난 챌린지들
-    const { data, error } = await supabase.from('challenges').select('*').eq('user_id', user.id).is('end_day', null);
+    const { data, error } = await supabase
+      .from('challenges')
+      .select('*')
+      .eq('user_id', user.id)
+      .or(`end_day.is.null,end_day.eq.${now}`); // 오늘 끝난 것도 추가
+
     // 오늘 안 끝난 챌린지들
     const todayUntillDone = data?.filter((goal) => goal.last_updated !== now) ?? [];
     // 오늘 끝난
@@ -154,7 +159,6 @@ export async function fetchChallengeById(id: number) {
       .eq('id', id)
       .eq('user_id', user.id)
       .single();
-
     if (error) throw error;
     return {
       success: true,

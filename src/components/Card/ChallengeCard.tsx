@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { Goal } from 'lucide-react';
 
 const ChallengeCard = ({ habit, success }: { habit: Tables<'challenges'>; success?: boolean }) => {
-  const isFinished = !!habit.end_day;
+  const isFinished = !!habit.end_day && !success; // 홈화면에서는 통일성을 위해 완료 ui 안보이도록 함
   const progressPercentage = ((habit.completed_days / habit.period) * 100).toFixed(0);
   const difference = isFinished && dayjs(habit.end_day).diff(dayjs(habit.start_day), 'day') + 1; // 모두 완료 시
 

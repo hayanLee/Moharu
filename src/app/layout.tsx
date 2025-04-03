@@ -27,6 +27,7 @@ const nanumSquareRound = localFont({
     },
   ],
   display: 'swap',
+  preload: false,
 });
 
 export const metadata: Metadata = {

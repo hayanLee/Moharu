@@ -24,12 +24,12 @@ interface StickerDrawerProps {
 const StickerDrawer = ({ goalId, disabled }: StickerDrawerProps) => {
   const [selectedSticker, setSelectedSticker] = useState<string>('');
   const { data } = useStickersQuery();
-  const { mutate, isPending } = useAddSticker();
+  const { mutateAsync, isPending } = useAddSticker();
   if (!data) return;
   const { data: stickers } = data;
 
   const handleClick = (signedUrl: string) => setSelectedSticker(signedUrl);
-  const handleSubmit = () => mutate({ goalId, selectedSticker });
+  const handleSubmit = async () => mutateAsync({ goalId, selectedSticker });
 
   return (
     <Drawer>
