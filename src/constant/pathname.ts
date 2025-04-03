@@ -4,6 +4,7 @@ export const SIGNUP = '/intro/sign-up';
 export const SETTINGS = '/settings';
 export const SETTINGS_PROFILE = '/settings/profile';
 export const SETTINGS_THEME = '/settings/theme';
+export const SETTINGS_ALARM = '/settings/alarm';
 
 export const HOME = '/';
 export const MYPAGE = '/mypage';

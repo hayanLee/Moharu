@@ -1,6 +1,6 @@
 import LogOutButton from '@/components/Button/LogOutButton';
 import VerticalProfile from '@/components/Profile/VerticalProfile';
-import { SETTINGS_PROFILE, SETTINGS_THEME } from '@/constant/pathname';
+import { SETTINGS_ALARM, SETTINGS_PROFILE, SETTINGS_THEME } from '@/constant/pathname';
 import { BellRing, Palette, UserRoundPen } from 'lucide-react';
 import Link from 'next/link';
 
@@ -23,7 +23,7 @@ const Settings = () => {
             </Link>
           </li>
           <li className='p-2 border rounded-sm bg-background hover:brightness-95'>
-            <Link href={SETTINGS_THEME} className='flex items-center gap-2 '>
+            <Link href={SETTINGS_ALARM} className='flex items-center gap-2 '>
               <BellRing size={16} />
               알림 설정
             </Link>
