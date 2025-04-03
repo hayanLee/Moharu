@@ -27,7 +27,7 @@ const StickerGrid = ({ period, progress }: StickerGridProps) => {
             {sticker && (
               <>
                 <Image
-                  src={sticker.sticker_img as string}
+                  src={`/stickers/${sticker.sticker_img}` as string}
                   alt='Picture of Sticker'
                   fill
                   className='object-cover'
