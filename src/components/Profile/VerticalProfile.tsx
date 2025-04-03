@@ -12,11 +12,16 @@ const VerticalProfile = () => {
 
   return (
     <div className='flex flex-col items-center'>
-      <div className='w-16 h-16 relative'>
+      <div className='w-16 h-16 relative  border-2 rounded-full border-point'>
         <Image
-          src={`https://${process.env.NEXT_PUBLIC_PROJECT_ID}.supabase.co/storage/v1/object/public/${profile_url}`}
+          src={
+            profile_url
+              ? `https://${process.env.NEXT_PUBLIC_PROJECT_ID}.supabase.co/storage/v1/object/public/${profile_url}`
+              : '/stickers/1.webp'
+          }
           alt='유저 프로필 이미지'
           fill
+          sizes='128px'
           priority
           className='aspect-square object-cover rounded-full'
         />
