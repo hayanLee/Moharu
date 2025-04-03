@@ -1,7 +1,21 @@
 {
-  "short_name": "Moharu",
-  "name": "모하루",
-  "description": "목표를 달성하며 스티커를 수집하는 습관 형성 도움 어플리케이션입니다.",
+  "short_name": "모하루",
+  "name": "모하루 (Moharu)",
+  "description": "하루가 모여 습관이 된다. 모하루와 함께 목표를 달성하며 즐겁게 습관을 만들어 보세요.",
+  "scope": "/",
+  "start_url": "/intro",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": [
+    {
+      "media": "(prefers-color-scheme: dark)",
+      "color": "#000000"
+    },
+    {
+      "media": "(prefers-color-scheme: light)",
+      "color": "#ffffff"
+    }
+  ],
   "icons": [
     {
       "src": "/icons/icon-16x16.png",

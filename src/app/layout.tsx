@@ -44,6 +44,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='ko' className={nanumSquareRound.className}>
+      <head>
+        <link rel='manifest' href='/manifest.json' />
+        <meta name='theme-color' content='#ffffff' media='(prefers-color-scheme: light)' />
+        <meta name='theme-color' content='#000000' media='(prefers-color-scheme: dark)' />
+      </head>
       <body>
         <Providers>{children}</Providers>
       </body>

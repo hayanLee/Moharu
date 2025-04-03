@@ -33,6 +33,12 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // pwa 정적 파일 요청
+  const PUBLIC_FILES = ['/manifest.json', '/favicon.ico', '/service-worker.js'];
+  if (PUBLIC_FILES.includes(request.nextUrl.pathname) || request.nextUrl.pathname.startsWith('/icons/')) {
+    return supabaseResponse;
+  }
+
   // OAuth 요청 강제 redirect 막기위해
   const isOAuthRoute =
     request.nextUrl.pathname.startsWith('/api/auth/') || request.nextUrl.pathname.startsWith('/callback');

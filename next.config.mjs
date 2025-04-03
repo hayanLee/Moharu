@@ -1,4 +1,12 @@
 /** @type {import('next').NextConfig} */
+import withPWA from 'next-pwa';
+
+const pwaConfig = withPWA({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development', // 개발모드에서 비활성화
+  register: true,
+  skipWaiting: true,
+});
 
 const nextConfig = {
   webpack: (config) => {
@@ -8,6 +16,9 @@ const nextConfig = {
     });
     return config;
   },
+  images: {
+    domains: ['xjtudfjrlmweewncuyig.supabase.co'],
+  },
 };
 
-export default nextConfig;
+export default pwaConfig(nextConfig);
