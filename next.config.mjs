@@ -8,11 +8,6 @@ const nextConfig = {
     });
     return config;
   },
-  images: {
-    domains: ['xjtudfjrlmweewncuyig.supabase.co'],
-    loader: 'custom',
-    loaderFile: './src/supabase/supabaseLoader.ts',
-  },
 };
 
 export default nextConfig;

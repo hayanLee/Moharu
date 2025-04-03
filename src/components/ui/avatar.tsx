@@ -4,7 +4,6 @@ import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import supabaseLoader from '@/supabase/supabaseLoader';
 
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
@@ -18,22 +17,27 @@ const Avatar = React.forwardRef<
 ));
 Avatar.displayName = AvatarPrimitive.Root.displayName;
 
+// const AvatarImage = React.forwardRef<
+//   React.ElementRef<typeof AvatarPrimitive.Image>,
+//   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+// >(({ className, src, ...props }, ref) => {
+//   return (
+//     <AvatarPrimitive.Image
+//       ref={ref}
+//       className={cn('aspect-square h-full w-full object-cover', className)}
+//       src={src}
+//       {...props}
+//     />
+//   );
+// });
+// AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+
 const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, src, ...props }, ref) => {
-  const imageSrc = React.useMemo(() => {
-    return supabaseLoader({ src: src || 'profile/default.jpg' });
-  }, [src]);
-  return (
-    <AvatarPrimitive.Image
-      ref={ref}
-      className={cn('aspect-square h-full w-full object-cover', className)}
-      src={imageSrc}
-      {...props}
-    />
-  );
-});
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Image ref={ref} className={cn('aspect-square h-full w-full object-cover', className)} {...props} />
+));
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
 const AvatarFallback = React.forwardRef<
