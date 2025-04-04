@@ -74,12 +74,23 @@ export async function updateUserProfile(formData: FormData) {
     if (!user) throw new Error('유저 없음');
 
     const newNickname = formData.get('nickname');
-    const newProfile = formData.get('profileUrl') as File;
+    const newProfile = formData.get('profileUrl');
     const newDescription = formData.get('description');
 
-    if (newProfile) await updateProfileImage(user.id, newProfile);
-    if (newNickname) await updateUserField(user.id, 'nickname', newNickname);
-    if (newDescription) await updateUserField(user.id, 'description', newDescription);
+    const updateTasks: Promise<any>[] = [];
+
+    if (newProfile) updateTasks.push(updateUserField(user.id, 'profile_url', newProfile));
+    if (newNickname) updateTasks.push(updateUserField(user.id, 'nickname', newNickname));
+    if (newDescription) updateTasks.push(updateUserField(user.id, 'description', newDescription));
+
+    const results = await Promise.allSettled(updateTasks);
+    const hasError = results.some((r) => r.status === 'rejected'); // 실패한 거 있으면
+    if (hasError) {
+      results.forEach((result) => {
+        if (result.status === 'rejected') console.error('업데이트 실패:', result.reason);
+      });
+      return { success: false, error: '일부 항목 업데이트 실패' };
+    }
     return { success: true };
   } catch (e) {
     console.error('프로필 업데이트 실패:', e);
@@ -90,10 +101,11 @@ export async function updateUserProfile(formData: FormData) {
 /* 4.2 유저 필드 업데이트 */
 async function updateUserField(userId: string, field: string, value: any) {
   const supabase = createClient();
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('users')
     .update({ [field]: value })
-    .eq('id', userId);
+    .eq('id', userId)
+    .select();
   if (error) throw new Error(`${field} 업데이트 실패: ${error.message}`);
 }
 
@@ -101,12 +113,12 @@ async function updateUserField(userId: string, field: string, value: any) {
 async function updateProfileImage(userId: string, newProfile: File) {
   try {
     const supabase = createClient();
-    const fileExtension = newProfile.name.split('.').pop(); // 확장자
+    const fileExtension = newProfile.name.split('.').pop()?.toLocaleLowerCase(); // 확장자
     const { error: ImageUploadError } = await supabase.storage
       .from('profile')
       .update(`${userId}/profile.${fileExtension}`, newProfile, {
-        cacheControl: '3600',
         upsert: true,
+        contentType: newProfile.type,
       });
 
     if (ImageUploadError) throw new Error(`이미지 스토리지 업로드 실패: ${ImageUploadError.message}`);

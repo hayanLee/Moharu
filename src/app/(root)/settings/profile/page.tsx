@@ -5,19 +5,22 @@ import { Input } from '@/components/ui/input';
 import { SETTINGS } from '@/constant/pathname';
 import useUpdateProfile from '@/hooks/mutations/useUpdateProfile';
 import useProfile from '@/hooks/querys/useProfile';
+import useStickersQuery from '@/hooks/querys/useStickersQuery';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
 import Link from 'next/link';
 import { FieldValues, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const formSchema = z.object({
   nickname: z.string().min(1, '닉네임은 최소 1글자 이상으로 설정해주세요.'),
-  profileUrl: z.instanceof(File).nullable().optional(),
+  profileUrl: z.string().optional().nullable(),
   description: z.string().optional(),
 });
 const SettingProfile = () => {
   const { data } = useProfile();
-  const { mutate } = useUpdateProfile();
-
+  const { data: stickersData } = useStickersQuery();
+  const { mutateAsync } = useUpdateProfile();
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'onBlur',
     defaultValues: {
@@ -27,13 +30,15 @@ const SettingProfile = () => {
     },
     values: data?.data,
   });
+  if (!stickersData) return;
+  const { data: stickers } = stickersData;
 
   const onSubmit = async (values: FieldValues) => {
     const formData = new FormData();
     for (const key in form.formState.dirtyFields) {
       formData.append(key, values[key]);
     }
-    mutate(formData);
+    await mutateAsync(formData);
   };
   return (
     <>
@@ -55,20 +60,12 @@ const SettingProfile = () => {
 
             <FormField
               control={form.control}
-              name='profileUrl'
-              render={({ field: { onChange, value, ...rest } }) => (
+              name='description'
+              render={({ field }) => (
                 <div className='grid grid-cols-[1fr_4fr] items-center gap-4'>
-                  <FormLabel>프로필 이미지</FormLabel>
+                  <FormLabel>한줄명</FormLabel>
                   <FormControl>
-                    <Input
-                      type='file'
-                      accept='image/*'
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        onChange(file ?? null);
-                      }}
-                      {...rest}
-                    />
+                    <Input placeholder='나를 위한 한마디' {...field} />
                   </FormControl>
                 </div>
               )}
@@ -76,12 +73,34 @@ const SettingProfile = () => {
 
             <FormField
               control={form.control}
-              name='description'
-              render={({ field }) => (
+              name='profileUrl'
+              render={({ field: { onChange, value, ...rest } }) => (
                 <div className='grid grid-cols-[1fr_4fr] items-center gap-4'>
-                  <FormLabel>한줄명</FormLabel>
+                  <FormLabel>프로필</FormLabel>
                   <FormControl>
-                    <Input placeholder='나를 위한 한마디' {...field} />
+                    <div className='grid grid-cols-3 gap-4 justify-items-center'>
+                      {stickers?.map((stickerObj) => {
+                        const isSelected = value === stickerObj.name;
+                        return (
+                          <div
+                            key={stickerObj.name}
+                            className={cn(
+                              'w-[66px] bg-white rounded-full relative aspect-square flex justify-center items-center border overflow-hidden',
+                              isSelected && 'border-point border-2 dark:border-blue-400'
+                            )}
+                            onClick={() => onChange(stickerObj.name)}
+                          >
+                            <Image
+                              src={stickerObj.url as string}
+                              alt='Picture of sticker'
+                              fill
+                              className='cursor-pointer object-cover'
+                              unoptimized
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
                   </FormControl>
                 </div>
               )}
