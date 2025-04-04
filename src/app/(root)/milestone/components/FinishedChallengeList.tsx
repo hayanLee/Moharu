@@ -14,7 +14,7 @@ const FinishedChallengeList = () => {
         <h3 className='mx-auto flex items-center gap-2'>
           🏆 완료한 챌린지 수 : <Skeleton className='w-4 h-4' />
         </h3>
-        <ChallengeListSkeleton />;
+        <ChallengeListSkeleton />
       </>
     );
   const { data: finishedGoals } = data;
