@@ -19,7 +19,6 @@ const useAddChallenge = () => {
         return toast({
           title: '등록 완료',
           description: '새로운 챌린지가 등록되었습니다!',
-          duration: 2000,
         });
       }
     },
@@ -28,7 +27,6 @@ const useAddChallenge = () => {
         title: '챌린지 추가 실패',
         description: '문제가 발생했습니다. 다시 시도해주세요.',
         variant: 'destructive',
-        duration: 2000,
       }),
   });
 };

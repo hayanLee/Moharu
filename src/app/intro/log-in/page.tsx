@@ -37,7 +37,6 @@ const LoginPage = () => {
       toast({
         title: '로그인 성공',
         description: '로그인이 정상적으로 되었습니다.',
-        duration: 2000,
       });
       router.replace(HOME);
     } else {
@@ -45,7 +44,6 @@ const LoginPage = () => {
         title: '로그인 실패',
         description: result.error,
         variant: 'destructive',
-        duration: 2000,
       });
     }
   };

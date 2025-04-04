@@ -20,7 +20,6 @@ const useUpdateChallenge = () => {
         return toast({
           title: '챌린지 수정 완료',
           description: '챌린지가 수정되었습니다!',
-          duration: 2000,
         });
       }
     },

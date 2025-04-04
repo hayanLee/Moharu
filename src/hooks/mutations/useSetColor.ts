@@ -20,7 +20,6 @@ const useSetColor = () => {
         toast({
           title: '변경 성공',
           description: '메인 컬러가 변경되었습니다.',
-          duration: 2000,
         });
       }
     },
@@ -29,7 +28,6 @@ const useSetColor = () => {
         title: '컬러 변경 실패',
         description: '문제가 발생했습니다. 다시 시도해주세요.',
         variant: 'destructive',
-        duration: 2000,
       }),
   });
 };

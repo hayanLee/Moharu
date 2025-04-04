@@ -12,13 +12,12 @@ const useUpdateProfile = () => {
     mutationFn: async (formData: FormData) => await updateUserProfile(formData),
     onSuccess: (data) => {
       if (data.success) {
-        router.back();
         queryClient.invalidateQueries({ queryKey: queryKeys.profile });
-        return toast({
+        toast({
           title: '프로필 변경 성공',
           description: '프로필이 정상적으로 변경되었습니다.',
-          duration: 2000,
         });
+        router.back();
       }
     },
     onError: () =>
@@ -26,7 +25,6 @@ const useUpdateProfile = () => {
         title: '프로필 변경 실패',
         description: '문제가 발생했습니다. 다시 시도해주세요.',
         variant: 'destructive',
-        duration: 2000,
       }),
   });
 };

@@ -17,7 +17,6 @@ const useDeleteChallenge = () => {
       return toast({
         title: '챌린지 삭제 완료',
         description: '챌린지가 삭제 되었습니다.',
-        duration: 2000,
       });
     },
     onError: () =>

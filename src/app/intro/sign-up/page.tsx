@@ -42,7 +42,6 @@ const AuthPage = () => {
         toast({
           title: '회원가입 성공',
           description: '회원가입이 정상적으로 완료되었습니다.',
-          duration: 2000,
         });
         router.replace(HOME);
       } else {
@@ -50,7 +49,6 @@ const AuthPage = () => {
           title: '회원가입 실패',
           description: result.error,
           variant: 'destructive',
-          duration: 2000,
         });
       }
     } catch (error) {
@@ -58,7 +56,6 @@ const AuthPage = () => {
         title: '회원가입 오류',
         description: '회원가입 실패',
         variant: 'destructive',
-        duration: 2000,
       });
     }
   };
