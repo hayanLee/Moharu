@@ -1,5 +1,5 @@
 import Providers from '@/providers';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 
@@ -30,9 +30,17 @@ const nanumSquareRound = localFont({
   preload: false,
 });
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
+};
+
 export const metadata: Metadata = {
   title: '모하루(Moharu)',
   description: '목표를 달성하며 스티커를 수집하는 습관 형성 도움 어플리케이션',
+  manifest: `${process.env.NEXT_PUBLIC_BASE_URL}/manifest.json`,
   icons: {
     icon: '/icons/icon-32x32.png',
   },
@@ -45,11 +53,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='ko' className={nanumSquareRound.className}>
-      <head>
-        <link rel='manifest' href='/manifest.json' />
-        <meta name='theme-color' content='#ffffff' media='(prefers-color-scheme: light)' />
-        <meta name='theme-color' content='#000000' media='(prefers-color-scheme: dark)' />
-      </head>
       <body>
         <Providers>{children}</Providers>
       </body>
